@@ -44,6 +44,12 @@ export const constantRoutes = [
   },
 
   {
+    path: '/register',
+    component: () => import('@/views/register'),
+    hidden: true,
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -53,7 +59,8 @@ export const constantRoutes = [
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
         meta: { title: 'Dashboard', icon: 'dashboard' },
-      }, {
+      },
+      {
         path: '/warning',
         name: 'Warning',
         component: () => import('@/views/warning/index'),

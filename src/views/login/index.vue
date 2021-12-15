@@ -7,18 +7,18 @@
       class="login-form"
       label-position="left"
     >
-      <h2 style="text-align: center">欢迎登录YJU！</h2>
-      <el-form-item style="margin-top: 40px" prop="username">
+      <h2 style="text-align: center; margin-bottom: 40px">欢迎登录YJU！</h2>
+      <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
           ref="username"
           v-model.trim="loginForm.username"
-          v-focus
           placeholder="请输入用户名"
           tabindex="1"
           type="text"
+          autofocus="true"
         />
       </el-form-item>
       <el-form-item prop="password">
@@ -50,7 +50,7 @@
           登录
         </el-button>
         <router-link to="/register">
-          <div style="margin-top: 20px; float: right">立即注册</div>
+          <div class="register-link">立即注册</div>
         </router-link>
       </el-form-item>
     </el-form>
@@ -138,94 +138,26 @@
 </script>
 
 <style lang="scss" scoped>
-  $base-font-size-default: 14px;
-  $base-font-size-small: 12px;
-  $base-color-white: #fff;
-  $base-color-blue: #409eff;
-  $base-color-red: #f34d37;
-  $base-z-index: 999;
-  $base-input-height: 32px;
-  $base-font-color: #606266;
-
   .login-container {
     display: flex;
-    min-height: 100%;
+    height: 100%;
     overflow: hidden;
     background: url('~@/assets/login-images/background.png') center center/cover
       fixed no-repeat;
 
-    .title {
-      font-size: 54px;
-      font-weight: 500;
-      color: rgba(14, 18, 26, 1);
-    }
-
-    .title-tips {
-      margin-top: 29px;
-      font-size: 26px;
-      font-weight: 400;
-      color: rgba(14, 18, 26, 1);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .login-btn {
-      display: inherit;
-      width: 220px;
-      height: 60px;
-      margin: 0 auto;
-      border: 0;
-
-      &:hover {
-        opacity: 0.9;
-      }
-    }
-
     .login-form {
-      align-items: center;
       width: 520px;
       margin: auto;
       overflow: hidden;
-      background-color: white;
+      background-color: $base-color-white;
       padding: 8px 24px;
-      border-radius: 8px;
+      border-radius: $base-border-radius-form;
 
-      .forget-password {
-        width: 100%;
-        margin-top: 40px;
-        text-align: left;
-
-        .forget-pass {
-          width: 129px;
-          height: 19px;
-          font-size: 20px;
-          font-weight: 400;
-          color: rgba(92, 102, 240, 1);
-        }
-      }
-    }
-
-    .tips {
-      margin-bottom: 10px;
-      font-size: $base-font-size-default;
-      color: $base-color-white;
-
-      span {
-        &:first-of-type {
-          margin-right: 16px;
-        }
-      }
-    }
-
-    .title-container {
-      position: relative;
-
-      .title {
-        margin: 0 auto 40px auto;
-        font-size: 34px;
-        font-weight: bold;
-        color: $base-color-blue;
-        text-align: center;
+      .login-btn {
+        display: inherit;
+        width: 220px;
+        height: 60px;
+        margin: 0 auto;
       }
     }
 
@@ -234,9 +166,8 @@
       top: 14px;
       left: 15px;
       z-index: $base-z-index;
-      font-size: 16px;
+      font-size: $base-font-size-default;
       color: #d7dee3;
-      cursor: pointer;
       user-select: none;
     }
 
@@ -244,7 +175,7 @@
       position: absolute;
       top: 14px;
       right: 25px;
-      font-size: 16px;
+      font-size: $base-font-size-default;
       color: #d7dee3;
       cursor: pointer;
       user-select: none;
@@ -254,7 +185,7 @@
       .el-form-item {
         padding-right: 0;
         margin: 20px 0;
-        color: #454545;
+        color: $base-color-black;
         background: transparent;
         border: 1px solid transparent;
         border-radius: 2px;
@@ -283,10 +214,16 @@
           font-size: $base-font-size-default;
           line-height: 58px;
           color: $base-font-color;
-          background: #f6f4fc;
+          background: $base-color-purple-lighter;
           border: 0;
           caret-color: $base-font-color;
         }
+      }
+
+      .register-link {
+        margin-top: 20px;
+        float: right;
+        color: $base-font-color-a;
       }
     }
   }

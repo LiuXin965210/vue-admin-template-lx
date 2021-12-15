@@ -10,17 +10,17 @@
               justify-content: space-between;
             "
           >
-            <div style="font-weight: bold; margin: 0rem; font-size: 16px;">
+            <div style="font-weight: bold; margin: 0rem; font-size: 16px">
               文书同意取得日
             </div>
             <div>
               <vab-icon
-                style="margin-right: 8px;"
+                style="margin-right: 8px"
                 :icon="['fas', 'envelope-open-text']"
               ></vab-icon>
             </div>
           </div>
-          <p style="color: blue;">{{ 'IMRD-00' + index }}</p>
+          <p style="color: blue">{{ 'IMRD-00' + index }}</p>
           <p>
             {{
               '《' + 'W0000' + index + '>'
@@ -37,17 +37,17 @@
               justify-content: space-between;
             "
           >
-            <div style="font-weight: bold; margin: 0rem; font-size: 16px;">
+            <div style="font-weight: bold; margin: 0rem; font-size: 16px">
               同时并用化学疗法开始日
             </div>
             <div>
               <vab-icon
-                style="margin-right: 8px;"
+                style="margin-right: 8px"
                 :icon="['fas', 'envelope-open-text']"
               ></vab-icon>
             </div>
           </div>
-          <p style="color: blue;">{{ 'IMRD-00' + index }}</p>
+          <p style="color: blue">{{ 'IMRD-00' + index }}</p>
           <p>
             {{
               '《' + 'W0000' + index + '>'
@@ -61,7 +61,7 @@
 
 <script>
   export default {
-    name: 'index',
+    name: 'Index',
     components: {},
     methods: {},
   }

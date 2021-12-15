@@ -24,6 +24,10 @@
   margin: 0 auto;
 }
 
+.el-dialog__header {
+  border-bottom: 1px solid #dedede;
+}
+
 // refine element ui upload
 .upload-container {
   .el-upload {
