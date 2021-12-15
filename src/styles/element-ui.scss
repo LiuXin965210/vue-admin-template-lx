@@ -47,3 +47,10 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+// card
+.card-item:hover {
+  border-color: #91bcfc;
+  outline: 0;
+  box-shadow: 0 0 0 8px rgba(53, 129, 243, 0.25);
+}

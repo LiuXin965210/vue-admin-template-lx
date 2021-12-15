@@ -1,7 +1,4 @@
-/**
- * @description 代码规范
- */
-
+// prettier代码规范
 module.exports = {
   printWidth: 80,
   tabWidth: 2,

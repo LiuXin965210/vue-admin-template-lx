@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <el-row :gutter="20">
+    <el-row :gutter="40">
       <el-col
         v-for="(index, item) in 8"
         :key="item.id"
@@ -23,8 +23,8 @@
               <h1>IMRD-00{{ index }}</h1>
             </div>
             <div>
-              <vab-icon style="margin-right: 8px" :icon="['fas', 'star']" />
-              <vab-icon :icon="['fas', 'envelope-open-text']" />
+              <svg-icon icon-class="star" />
+              <svg-icon style="margin-left: 20px" icon-class="document" />
             </div>
           </div>
           <p>○○○研究中心</p>
@@ -86,9 +86,17 @@
     &-container {
       margin: 30px;
     }
-    &-text {
-      font-size: 30px;
-      line-height: 46px;
+  }
+
+  .el-col {
+    margin-bottom: 40px;
+  }
+
+  .progress-container {
+    margin-top: 16px;
+
+    & > * {
+      margin: 0 8px;
     }
   }
 </style>

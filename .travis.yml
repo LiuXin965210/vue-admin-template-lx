@@ -1,3 +1,4 @@
+# 代码提交git时，执行命令
 language: node_js
 node_js: 10
 script: npm run test
