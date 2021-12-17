@@ -1,20 +1,65 @@
 <template>
   <div class="navbar">
     <div class="study-container">
-      <img src="@/assets/icon-images/logo.png" class="study-icon" />
-      <h2 style="text-align: center">{{ appName }}</h2>
+      <img src="@/assets/icon-images/logo.svg" class="study-icon" />
+      <div class="study-title">
+        {{ appName }}
+      </div>
     </div>
     <el-tabs type="border-card" style="height: 100%; width: 100%">
       <el-tab-pane label="受试者">
         <div style="display: flex; align-items: center">
           <div class="search-input">
-            <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span>
-            <el-input v-model="search"></el-input>
-            <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span>
+            <el-popover placement="bottom-start" width="400" trigger="click">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 10px;
+                "
+              >
+                <div>历史记录</div>
+                <div>
+                  <el-link v-if="canEdit" type="primary" @click="editTags">
+                    完成
+                  </el-link>
+                  <span v-else>
+                    <el-link type="primary" @click="clearTags">清空</el-link>
+                    <el-divider direction="vertical"></el-divider>
+                    <el-link type="primary" @click="editTags">编辑</el-link>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <el-tag
+                  v-for="tag in tags"
+                  :key="tag.name"
+                  :closable="canEdit"
+                  @close="handleClose(tag)"
+                  :type="tag.type"
+                  style="margin-right: 10px"
+                >
+                  {{ tag.name }}
+                </el-tag>
+              </div>
+              <span slot="reference" class="svg-container">
+                <svg-icon icon-class="history" />
+              </span>
+            </el-popover>
+            <el-input v-model="keywords" @change="search"></el-input>
+
+            <el-popover placement="bottom-start" trigger="hover">
+              <el-radio-group v-model="searchType">
+                <el-radio-button label="全部"></el-radio-button>
+                <el-radio-button label="输入率"></el-radio-button>
+                <el-radio-button label="审查率"></el-radio-button>
+                <el-radio-button label="SDV率"></el-radio-button>
+                <el-radio-button label="锁定率"></el-radio-button>
+              </el-radio-group>
+              <span slot="reference" class="svg-container">
+                <svg-icon icon-class="arrow-down" />
+              </span>
+            </el-popover>
           </div>
           <el-button icon="el-icon-video-play" @click="showBatchExecution">
             执行
@@ -33,11 +78,11 @@
         <div style="display: flex; align-items: center">
           <div class="search-input">
             <span class="svg-container">
-              <svg-icon icon-class="password" />
+              <svg-icon icon-class="history" />
             </span>
-            <el-input v-model="search"></el-input>
+            <el-input v-model="keywords"></el-input>
             <span class="svg-container">
-              <svg-icon icon-class="password" />
+              <svg-icon icon-class="arrow-down" />
             </span>
           </div>
           <el-button icon="el-icon-video-play">执行</el-button>
@@ -54,11 +99,11 @@
         <div style="display: flex; align-items: center">
           <div class="search-input">
             <span class="svg-container">
-              <svg-icon icon-class="password" />
+              <svg-icon icon-class="history" />
             </span>
-            <el-input v-model="search"></el-input>
+            <el-input v-model="keywords"></el-input>
             <span class="svg-container">
-              <svg-icon icon-class="password" />
+              <svg-icon icon-class="arrow-down" />
             </span>
           </div>
           <el-button icon="el-icon-video-play">执行</el-button>
@@ -74,21 +119,21 @@
     </el-tabs>
 
     <div class="user-info-container">
-      <el-badge value="">
-        <el-button>研究者</el-button>
-      </el-badge>
-      <el-select v-model="curhospital" placeholder="请选择研究中心">
+      <el-select v-model="curRole" placeholder="研究者" size="medium">
         <el-option
-          v-for="item in hospitals"
+          v-for="item in roles"
           :key="item.value"
           :label="item.label"
           :value="item.value"
         ></el-option>
       </el-select>
-      <el-dropdown @command="handleCommand">
+      <el-button size="medium" @click="showChangeHospital">
+        请选择研究中心
+      </el-button>
+      <el-dropdown>
         <el-avatar icon="el-icon-user-solid"></el-avatar>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="personalCenter">个人中心</el-dropdown-item>
+          <el-dropdown-item>个人中心</el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">退出登录</span>
           </el-dropdown-item>
@@ -96,33 +141,45 @@
       </el-dropdown>
     </div>
     <BatchExecution ref="batchExcution"></BatchExecution>
+    <IgnoreWarning ref="ignoreWarning"></IgnoreWarning>
+    <changeHospital ref="changeHospital"></changeHospital>
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
   import BatchExecution from './BatchExecution'
+  import IgnoreWarning from './IgnoreWarning'
+  import ChangeHospital from './ChangeHospital/'
 
   export default {
     name: 'Navbar',
-    components: { BatchExecution },
+    components: { BatchExecution, IgnoreWarning, ChangeHospital },
     data() {
       return {
-        search: '',
-        curhospital: 'All',
+        searchType: '全部',
+        canEdit: false,
+        keywords: '',
+        curRole: 'DoctorC',
         appName: 'IMP_RMD',
-        hospitals: [
+        tags: [
+          { name: '常用', type: 'info' },
+          { name: '输入率>50%', type: 'info' },
+          { name: '张三', type: 'info' },
+          { name: '男', type: 'info' },
+        ],
+        roles: [
           {
-            value: 'All',
-            label: '所有可访问研究中心',
+            value: 'DoctorC',
+            label: '研究者',
           },
           {
-            value: 'HospitalA',
-            label: '研究中心A',
+            value: 'DoctorA',
+            label: '医生A',
           },
           {
-            value: 'HospitalB',
-            label: '研究中心B',
+            value: 'DoctorB',
+            label: '医生B',
           },
         ],
       }
@@ -133,6 +190,29 @@
     methods: {
       showBatchExecution() {
         this.$refs['batchExcution'].show()
+      },
+      showIgnoreWarning() {
+        this.$refs['ignoreWarning'].showIgnoreWaring()
+      },
+      showChangeHospital() {
+        this.$refs['changeHospital'].showChangeHosp()
+      },
+      search() {
+        this.$store
+          .dispatch('app/search', this.keywords)
+          .then(() => {})
+          .catch(() => {
+            this.$message('检索出错')
+          })
+      },
+      handleClose(tag) {
+        this.tags.splice(this.tags.indexOf(tag), 1)
+      },
+      clearTags() {
+        this.tags.splice(0, this.tags.length)
+      },
+      editTags() {
+        this.canEdit = !this.canEdit
       },
       async logout() {
         await this.$store.dispatch('user/logout')
@@ -159,6 +239,13 @@
       }
     }
 
+    .study-title {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: $base-font-weight-title;
+      font-size: $base-font-size-title;
+    }
+
     .module-container {
       & > * {
         margin-left: 40px;
@@ -167,7 +254,6 @@
 
     .user-info-container {
       position: absolute;
-      top: 4px;
       right: 0;
       display: flex;
       align-items: center;
@@ -184,6 +270,7 @@
       border: 1px solid #d7dee3;
       border-radius: 32px;
       padding: 5px 5px;
+      background-color: #fff;
 
       .svg-container {
         font-size: 16px;
@@ -194,23 +281,34 @@
     }
 
     ::v-deep {
+      .el-tabs__nav {
+        padding-top: 6px;
+      }
+      .el-tabs__nav {
+        padding-left: 25px;
+      }
+      .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+        border-top-color: #dcdfe6;
+      }
       .el-tabs__content {
         .el-input {
           input {
             border: 0;
             width: 400px;
+            height: 20px;
           }
         }
         .el-button {
-          border: 0;
           padding: 0;
-          font-size: 18px;
+          border: 0;
+          background-color: transparent;
         }
       }
       .el-tabs__item {
-        height: 60px;
-        line-height: 60px;
-        font-size: 18px;
+        height: 50px;
+        width: 120px;
+        line-height: 50px;
+        font-size: 16px;
       }
     }
 

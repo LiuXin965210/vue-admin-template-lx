@@ -18,6 +18,10 @@ $base-border-radius-form: 8px;
 // font-size
 $base-font-size-default: 16px;
 $base-font-size-small: 12px;
+$base-font-size-title: 25px;
+
+// font-weight
+$base-font-weight-title: 700;
 
 // font-color
 $base-font-color: #303133;
@@ -52,4 +56,3 @@ $base-form-margin: 40px;
   subMenuHover: $subMenuHover;
   sideBarWidth: $sideBarWidth;
 }
-

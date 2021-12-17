@@ -28,6 +28,10 @@
   border-bottom: 1px solid #dedede;
 }
 
+.el-dialog__footer {
+  border-top: 1px solid #dedede;
+}
+
 // refine element ui upload
 .upload-container {
   .el-upload {
@@ -57,4 +61,25 @@
   border-color: #91bcfc;
   outline: 0;
   box-shadow: 0 0 0 8px rgba(53, 129, 243, 0.25);
+}
+
+// tabs
+.el-tabs--border-card>.el-tabs__header {
+  background-color: #fff;
+
+  .el-tabs__item.is-active {
+    font-weight: 700;
+    color: #000;
+    background-color: rgb(245, 242, 244);
+  }
+  .el-tabs__item {
+    color: #000;
+    text-align: center;
+  }
+}
+.el-tabs__content {
+  background-color: rgb(245, 242, 244);
+}
+.el-tabs--border-card>.el-tabs__content {
+  padding: 10px;
 }

@@ -47,6 +47,7 @@ module.exports = {
         '@': resolve('src'),
       },
     },
+    // devtool: process.env.NODE_ENV === 'development' ? 'source-map' : undefined,
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload
@@ -116,7 +117,7 @@ module.exports = {
     })
   },
   css: {
-    sourceMap: process.env.NODE_ENV === 'production',
+    sourceMap: process.env.NODE_ENV === 'development',
     //是否只有 *.module.[ext] 结尾的文件才会被视作CSS Modules 模块
     requireModuleExtension: true,
     loaderOptions: {

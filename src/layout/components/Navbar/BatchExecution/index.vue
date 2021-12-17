@@ -1,10 +1,5 @@
 ﻿<template>
-  <el-dialog
-    :title="title"
-    :visible.sync="dialogFormVisible"
-    width="750px"
-    @close="close"
-  >
+  <el-dialog :title="title" :visible.sync="dialogFormVisible" width="750px">
     <el-container class="container">
       <el-header class="excution-header">
         <el-select v-model="value" placeholder="请选择类型">

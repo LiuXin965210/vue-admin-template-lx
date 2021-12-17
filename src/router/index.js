@@ -50,9 +50,16 @@ export const constantRoutes = [
   },
 
   {
+    path: '/input-data',
+    component: () => import('@/views/input-data/index'),
+    hidden: true,
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    meta: { title: 'Example', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'dashboard',

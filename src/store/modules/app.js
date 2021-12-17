@@ -8,6 +8,7 @@ const state = {
     withoutAnimation: false,
   },
   device: 'desktop',
+  keywords: '',
 }
 
 const mutations = {
@@ -28,6 +29,9 @@ const mutations = {
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
   },
+  SEARCH: (state, keywords) => {
+    state.keywords = keywords
+  },
 }
 
 const actions = {
@@ -39,6 +43,9 @@ const actions = {
   },
   toggleDevice({ commit }, device) {
     commit('TOGGLE_DEVICE', device)
+  },
+  search({ commit }, keywords) {
+    commit('SEARCH', keywords)
   },
 }
 
