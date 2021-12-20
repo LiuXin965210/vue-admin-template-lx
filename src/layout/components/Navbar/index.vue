@@ -119,7 +119,7 @@
     </el-tabs>
 
     <div class="user-info-container">
-      <el-select v-model="curRole" placeholder="研究者" size="medium">
+      <el-select v-model="curRole" placeholder="研究者">
         <el-option
           v-for="item in roles"
           :key="item.value"

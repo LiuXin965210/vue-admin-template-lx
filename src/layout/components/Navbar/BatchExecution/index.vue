@@ -173,7 +173,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .left-tree {
     padding-top: 1rem;
     padding-bottom: 1rem;

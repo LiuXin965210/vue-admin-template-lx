@@ -5,7 +5,7 @@
       class="drawer-bg"
       @click="handleClickOutside"
     />
-    <sidebar class="sidebar-container" />
+    <!-- <sidebar class="sidebar-container" /> -->
     <div class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <navbar />
@@ -23,7 +23,7 @@
     name: 'Layout',
     components: {
       Navbar,
-      Sidebar,
+      // Sidebar,
       AppMain,
     },
     mixins: [ResizeMixin],
@@ -79,13 +79,13 @@
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    // width: calc(100% - #{$sideBarWidth});
     transition: width 0.28s;
   }
 
-  .hideSidebar .fixed-header {
-    width: calc(100% - 54px);
-  }
+  // .hideSidebar .fixed-header {
+  //   width: calc(100% - 54px);
+  // }
 
   .mobile .fixed-header {
     width: 100%;

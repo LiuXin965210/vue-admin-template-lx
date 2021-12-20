@@ -2,8 +2,8 @@
   <div class="dashboard-container">
     <el-row :gutter="40">
       <el-col
-        v-for="(index, item) in 8"
-        :key="item.id"
+        v-for="(item, index) in cards"
+        :key="item.number"
         :span="6"
         :xs="24"
         :sm="24"
@@ -12,7 +12,7 @@
         :xl="6"
       >
         <el-card class="card-item">
-          <div @dblclick="openInputData">
+          <div @dblclick="openInputData(`IMRD-00${index}`)">
             <div
               style="
                 display: flex;
@@ -21,11 +21,19 @@
               "
             >
               <div>
-                <div class="card-title">IMRD-00{{ index }}</div>
+                <div class="card-title">IMRD-00{{ item.number }}</div>
               </div>
               <div>
-                <svg-icon icon-class="star" />
-                <svg-icon style="margin-left: 10px" icon-class="shopping" />
+                <svg-icon
+                  :style="{ fill: item.stared ? '#FFEC00' : '#DEDEDE' }"
+                  icon-class="star"
+                  @click.stop="star(index)"
+                />
+                <svg-icon
+                  style="margin-left: 10px"
+                  :icon-class="item.collected ? 'shopping' : 'grey-shopping'"
+                  @click="collect(index)"
+                />
                 <!-- <el-dropdown style="margin-left: 10px">
                 <el-button
                   icon="el-icon-setting"
@@ -43,45 +51,61 @@
             </div>
             <div style="margin-top: 10px; margin-bottom: 10px">○○○研究中心</div>
             <div style="margin-top: 10px; margin-bottom: 10px">
-              患者识别番号H001-{{ index }}
+              患者识别番号H001-{{ item.number }}
             </div>
             <div style="margin-top: 10px; margin-bottom: 10px">出生日期</div>
-            <el-progress
-              color="#20c6dc"
-              :text-inside="true"
-              :stroke-width="26"
-              :percentage="70"
-              :format="format"
-            />
+            <div style="display: flex; position: relative; align-items: center">
+              <el-progress
+                color="#20c6dc"
+                :text-inside="true"
+                :stroke-width="26"
+                :percentage="70"
+                :format="format"
+                style="width: 100%"
+              />
+              <svg-icon
+                v-show="item.hasError"
+                icon-class="error"
+                style="position: absolute; right: 10px"
+              />
+            </div>
             <div class="progress-container">
-              <el-progress
-                :width="48"
-                :stroke-width="4"
-                type="circle"
-                :percentage="25"
-                :format="formatCheck"
-              />
-              <el-progress
-                :width="48"
-                :stroke-width="4"
-                type="circle"
-                :percentage="25"
-                :format="formatSDV"
-              />
-              <el-progress
-                :width="48"
-                :stroke-width="4"
-                type="circle"
-                :percentage="25"
-                :format="formatSign"
-              />
-              <el-progress
-                :width="48"
-                :stroke-width="4"
-                type="circle"
-                :percentage="25"
-                :format="formatLock"
-              />
+              <div>
+                <el-progress
+                  :width="48"
+                  :stroke-width="4"
+                  type="circle"
+                  :percentage="25"
+                  :format="formatCheck"
+                />
+              </div>
+              <div @dblclick.stop="openSdvInput">
+                <el-progress
+                  :width="48"
+                  :stroke-width="4"
+                  type="circle"
+                  :percentage="25"
+                  :format="formatSDV"
+                />
+              </div>
+              <div>
+                <el-progress
+                  :width="48"
+                  :stroke-width="4"
+                  type="circle"
+                  :percentage="25"
+                  :format="formatSign"
+                />
+              </div>
+              <div>
+                <el-progress
+                  :width="48"
+                  :stroke-width="4"
+                  type="circle"
+                  :percentage="25"
+                  :format="formatLock"
+                />
+              </div>
             </div>
             <div v-if="keywords !== ''">
               <el-divider></el-divider>
@@ -107,6 +131,16 @@
     },
     data() {
       return {
+        cards: [
+          { number: 1, stared: true, collected: false, hasError: true },
+          { number: 2, stared: false, collected: false, hasError: false },
+          { number: 3, stared: false, collected: true, hasError: true },
+          { number: 4, stared: false, collected: false, hasError: false },
+          { number: 5, stared: true, collected: true, hasError: true },
+          { number: 6, stared: false, collected: false, hasError: true },
+          { number: 7, stared: true, collected: false, hasError: false },
+          { number: 8, stared: false, collected: true, hasError: true },
+        ],
         // keywords: this.$store.state.app.search,
       }
     },
@@ -126,8 +160,14 @@
       formatLock(percentage) {
         return percentage != 100 ? '锁定' + percentage + '%' : '锁定完毕'
       },
-      openInputData() {
-        this.$router.push('/input-data')
+      openInputData(title) {
+        this.$router.push({ path: 'input-data', query: { title } })
+      },
+      star(index) {
+        this.cards[index].stared = !this.cards[index].stared
+      },
+      collect(index) {
+        this.cards[index].collected = !this.cards[index].collected
       },
     },
   }
@@ -151,6 +191,7 @@
 
   .progress-container {
     margin-top: 16px;
+    display: flex;
 
     & > * {
       margin: 0 8px;
@@ -169,6 +210,7 @@
     font-size: $base-font-size-small;
     span {
       color: $base-color-red;
+      word-break: break-all;
     }
   }
 </style>
