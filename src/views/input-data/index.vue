@@ -69,7 +69,7 @@
               </el-card>
             </el-col>
           </el-row>
-          <el-row v-if="showBasic">
+          <el-row v-show="showBasic">
             <el-tag type="info" class="data-title">【基本情报】</el-tag>
             <el-table
               :data="basicInfo"
@@ -86,7 +86,7 @@
               </el-table-column>
             </el-table>
           </el-row>
-          <el-row v-if="showRetention">
+          <el-row v-show="showRetention">
             <el-tag type="info" class="data-title">【留置信息】</el-tag>
             <el-table
               :data="retentionInfo"
@@ -102,7 +102,7 @@
               </el-table-column>
             </el-table>
           </el-row>
-          <el-row v-if="showComplication">
+          <el-row v-show="showComplication">
             <el-tag
               type="info"
               class="data-title"
@@ -160,7 +160,7 @@
               </div>
               <div>请输入同意取得日。</div>
             </div>
-            <div class="tab-card">
+            <div v-if="showCard2" class="tab-card">
               <div
                 style="
                   display: flex;
@@ -174,9 +174,19 @@
               <div>xxxxxxx</div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="质疑" name="question">质疑</el-tab-pane>
+          <el-tab-pane label="质疑" name="question">
+            <div class="tab-card"></div>
+          </el-tab-pane>
           <el-tab-pane label="修订" name="revise">修订</el-tab-pane>
-          <el-tab-pane label="批注" name="annotation">批注</el-tab-pane>
+          <el-tab-pane label="批注" name="annotation">
+            <textarea
+              id=""
+              name=""
+              cols="30"
+              rows="10"
+              class="tab-card"
+            ></textarea>
+          </el-tab-pane>
         </el-tabs>
       </el-aside>
       <el-aside
@@ -210,6 +220,7 @@
         defaultSelectedKeys: ['111'],
         title: '',
         folder: [],
+        showCard2: true,
       }
     },
     created() {},
@@ -281,7 +292,9 @@
         }
         return false
       },
-      hiddenCard() {},
+      hiddenCard() {
+        this.showCard2 = false
+      },
     },
   }
 </script>
@@ -361,5 +374,6 @@
   .register-link {
     float: right;
     color: $base-font-color-a;
+    cursor: pointer;
   }
 </style>
