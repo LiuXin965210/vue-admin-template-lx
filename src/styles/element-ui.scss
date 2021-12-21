@@ -24,8 +24,13 @@
   margin: 0 auto;
 }
 
+.el-dialog__body {
+  padding: 25px 20px;
+}
+
 .el-dialog__header {
   border-bottom: 1px solid #dedede;
+  padding: 15px 20px;
 }
 
 .el-dialog__footer {
@@ -60,7 +65,7 @@
 .card-item:hover {
   border-color: #91bcfc;
   outline: 0;
-  box-shadow: 0 0 0 8px rgba(53, 129, 243, 0.25);
+  box-shadow: 0 0 0 6px rgba(53, 129, 243, 0.25);
 }
 
 // tabs

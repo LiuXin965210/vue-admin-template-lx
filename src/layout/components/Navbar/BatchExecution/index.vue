@@ -1,55 +1,57 @@
 ﻿<template>
-  <el-dialog :title="title" :visible.sync="dialogFormVisible" width="750px">
-    <el-container class="container">
-      <el-header class="excution-header">
-        <el-select v-model="value" placeholder="请选择类型">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-        <el-button type="primary" class="clean" @click="implementAndClear">
-          执行后清空
-        </el-button>
-        <el-button type="primary" @click="implement">执行</el-button>
-        <el-link class="clean-all" @click="clearAll">
-          <svg-icon icon-class="broom" />
-          清空
-        </el-link>
-      </el-header>
+  <el-dialog title="批量执行" :visible.sync="dialogVisible">
+    <el-header class="excution-header">
+      <el-select v-model="executionType" placeholder="请选择类型">
+        <el-option
+          v-for="item in executionTypes"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-button
+        type="primary"
+        style="margin-left: 8px"
+        @click="executeAndClear"
+      >
+        执行后清空
+      </el-button>
+      <el-button type="primary" style="margin-left: 8px" @click="execute">
+        执行
+      </el-button>
+      <el-link style="margin-left: 250px" @click="clearAll">
+        <svg-icon icon-class="broom" />
+        清空
+      </el-link>
+    </el-header>
 
-      <el-container>
-        <el-aside width="200px" class="left-tree">
-          <el-tree
-            :data="tree"
-            show-checkbox
-            node-key="id"
-            :default-expanded-keys="[1, 2, 3, 4, 5]"
-            :default-checked-keys="[2, 40]"
-            :prop="defaultProps"
-          ></el-tree>
-        </el-aside>
-        <el-main class="right-card">
-          <el-row :gutter="15">
-            <el-col v-for="(index, item) in 8" :key="item.id" :span="8">
-              <div :class="getClass(index)" @click="getIndex(index)">
-                <div style="font-weight: bold">
-                  {{ 'IMRD-00' + index }}
-                  <svg-icon
-                    v-show="imgshow(index)"
-                    icon-class="close"
-                    style="margin-left: 2.5rem"
-                    @click="destoryCard(index)"
-                  />
-                </div>
-                <p class="card-font">○○○研究中心</p>
+    <el-container style="height: 400px">
+      <el-aside width="200px" class="tree-container">
+        <el-tree
+          :data="tree"
+          show-checkbox
+          node-key="id"
+          default-expand-all="true"
+        ></el-tree>
+      </el-aside>
+      <el-main class="card-container">
+        <el-row :gutter="15">
+          <el-col v-for="(index, item) in 8" :key="item.id" :span="8">
+            <div :class="getClass(index)" @click="getIndex(index)">
+              <div style="font-weight: bold">
+                {{ 'IMRD-00' + index }}
+                <svg-icon
+                  v-show="imgshow(index)"
+                  icon-class="close"
+                  style="margin-left: 2.5rem"
+                  @click="destoryCard(index)"
+                />
               </div>
-            </el-col>
-          </el-row>
-        </el-main>
-      </el-container>
+              <p class="card-font">○○○研究中心</p>
+            </div>
+          </el-col>
+        </el-row>
+      </el-main>
     </el-container>
   </el-dialog>
 </template>
@@ -59,13 +61,14 @@
     name: 'Index',
     data() {
       return {
-        options: [
+        executionType: 'SDV',
+        executionTypes: [
           {
             value: 'SDV',
             label: 'SDV完了',
           },
           {
-            value: 'data',
+            value: 'DATA',
             label: '数据审核',
           },
         ],
@@ -129,14 +132,9 @@
             ],
           },
         ],
-        defaultProps: {
-          children: 'children',
-          label: 'label',
-        },
         value: '',
-        title: '',
         currentNumber: 0,
-        dialogFormVisible: false,
+        dialogVisible: false,
       }
     },
     created() {},
@@ -151,37 +149,21 @@
         return [this.currentNumber == index ? 'active' : 'cards']
       },
       show() {
-        this.title = '批量执行'
-        this.dialogFormVisible = true
+        this.dialogVisible = true
       },
-      clearAll() {
-        alert('清空')
-      },
-      implement() {
-        this.dialogFormVisible = false
-        alert('执行')
-      },
-      implementAndClear() {
-        this.dialogFormVisible = false
-        alert('执行后清空')
-      },
-      destoryCard(index) {
-        this.dialogFormVisible = false
-        alert('清除选中卡片')
-      },
+      clearAll() {},
+      executeAndClear() {},
+      destoryCard() {},
     },
   }
 </script>
 
 <style lang="scss" scoped>
-  .left-tree {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 0.5rem;
+  .tree-container {
     border: 1px solid #c3c3c5;
-    border-radius: 0px;
+    padding: 8px 0;
   }
-  .right-card {
+  .card-container {
     border: 1px solid #c3c3c5;
     border-radius: 0px;
     margin-left: 0.5rem;
@@ -208,12 +190,6 @@
     margin-top: 2px;
     margin-bottom: 0rem;
     padding-left: 0.3rem;
-  }
-  .clean {
-    margin-left: 0.5rem;
-  }
-  .clean-all {
-    margin-left: 15rem;
   }
   .excution-header {
     height: 40px !important;

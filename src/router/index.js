@@ -56,22 +56,28 @@ export const constantRoutes = [
   },
 
   {
+    path: '/sdv-input',
+    component: () => import('@/views/sdv-input/index'),
+    hidden: true,
+  },
+
+  {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home',
     meta: { title: 'Example', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: 'Dashboard', icon: 'dashboard' },
+        path: 'home',
+        name: 'Home',
+        component: () => import('@/views/home/index'),
+        meta: { title: 'Home', icon: 'home' },
       },
       {
         path: '/warning',
         name: 'Warning',
         component: () => import('@/views/warning/index'),
-        meta: { title: 'Warning', icon: 'dashboard' },
+        meta: { title: 'Warning', icon: 'home' },
       },
     ],
   },

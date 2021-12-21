@@ -1,51 +1,38 @@
 <template>
-  <div class="inputData-container">
-    <div style="display: flex; align-items: center; background-color: #f5f4f3;">
-      <div class="study-container">
-        <img src="@/assets/icon-images/logo.svg" class="study-icon" />
-      </div>
-      <label style="padding: 10px;">IMP_RMD > 症例入力 > {{ title }}</label>
-      <div style="margin-left: auto; padding: 10px;">
-        <el-button type="primary" :disabled="saved" @click="save">
-          保 存
-        </el-button>
-        <el-button type="primary" @click="close">关 闭</el-button>
-      </div>
-    </div>
-
-    <el-container style="height: 650px;">
-      <el-aside style="border: 1px solid #dfdfdf;">
-        <el-tree
-          node-key="id"
-          :default-checked-keys="defaultSelectedKeys"
-          :default-expanded-keys="defaultExpandedKeys"
-          :data="treeOptions"
-          :props="defaultProps"
-          :highlight-current="true"
-          :render-content="renderTree"
-          :expand-on-click-node="false"
-          @current-change="changeForm"
-        ></el-tree>
-      </el-aside>
-      <el-main style="border: 1px solid #dfdfdf;">
-        <el-scrollbar style="height: 100%;">
-          <el-row v-show="folder.length != 0">
+  <div>
+    <el-container>
+      <el-header height="auto">
+        <Navbar></Navbar>
+      </el-header>
+      <el-container>
+        <el-aside style="border: 1px solid #dfdfdf">
+          <el-tree
+            node-key="id"
+            :default-checked-keys="defaultSelectedKeys"
+            :default-expanded-keys="defaultExpandedKeys"
+            :data="treeOptions"
+            :props="defaultProps"
+            :highlight-current="true"
+            :render-content="renderTree"
+            :expand-on-click-node="false"
+            @current-change="changeForm"
+          ></el-tree>
+        </el-aside>
+        <!-- <el-scrollbar style="height: 100%"> -->
+        <el-main>
+          <el-row v-show="folder.length != 0" :gutter="20">
             <el-tag type="info" class="data-title">【{{ title }}】</el-tag>
             <el-col
               v-for="item of folder"
               :key="item.id"
-              :span="6"
-              :xs="24"
-              :sm="24"
-              :md="12"
-              :lg="6"
-              :xl="6"
+              :span="8"
+              style="margin-bottom: 10px"
             >
               <el-card class="card-item">
                 <div>
-                  <div style="display: flex; align-items: center;">
+                  <div style="display: flex; align-items: center">
                     <svg-icon :icon-class="item.icon" />
-                    <span style="margin-left: 10px;">{{ item.label }}</span>
+                    <span style="margin-left: 10px">{{ item.label }}</span>
                   </div>
                   <div
                     style="
@@ -55,6 +42,13 @@
                       margin-top: 10px;
                     "
                   >
+                    <el-progress
+                      :width="48"
+                      :stroke-width="4"
+                      type="circle"
+                      :percentage="70"
+                      :format="formatCheck"
+                    />
                     <el-progress
                       :width="48"
                       :stroke-width="4"
@@ -88,8 +82,8 @@
                         </td>
                       </tr>
                       <tr>
-                        <td style="color: #f6bb4e;">质疑</td>
-                        <td style="color: red;">警告</td>
+                        <td style="color: #f6bb4e">质疑</td>
+                        <td style="color: red">警告</td>
                       </tr>
                     </div>
                   </div>
@@ -104,7 +98,6 @@
               :show-header="false"
               border
               :cell-style="addClass"
-              style="border-color: black;"
             >
               <el-table-column prop="label" width="300px"></el-table-column>
               <el-table-column prop="value">
@@ -119,7 +112,6 @@
             <el-table
               :data="retentionInfo"
               :show-header="false"
-              border="1px solid black"
               :cell-style="addClass"
             >
               <el-table-column prop="label" width="200px"></el-table-column>
@@ -134,7 +126,7 @@
             <el-tag
               type="info"
               class="data-title"
-              style="display: flex; align-items: center;"
+              style="display: flex; align-items: center"
             >
               【并发症】
               <el-button
@@ -152,12 +144,7 @@
                 追加
               </el-button>
             </el-tag>
-            <el-table
-              :data="complication"
-              :show-header="false"
-              border="1px solid black"
-              :cell-style="addClass"
-            >
+            <el-table :data="complication" :show-header="false">
               <el-table-column prop="label" width="250px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
@@ -166,104 +153,99 @@
               </el-table-column>
             </el-table>
           </el-row>
-        </el-scrollbar>
-      </el-main>
-      <el-aside style="border: 1px solid #dfdfdf; border-right: none;">
-        <el-tabs
-          v-model="activeName"
-          style="height: 609px;"
-          @tab-click="handleClick"
-        >
-          <el-tab-pane label="警告" name="warning">
-            <div class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>2021/11/24</div>
-                <svg-icon icon-class="error-check" />
+          <!-- </el-scrollbar> -->
+        </el-main>
+        <el-aside style="border: 1px solid #dfdfdf; border-right: none">
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="警告" name="warning">
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>2021/11/24</div>
+                  <svg-icon icon-class="error-check" />
+                </div>
+                <div>请输入同意取得日。</div>
               </div>
-              <div>请输入同意取得日。</div>
-            </div>
-            <div v-if="showCard2" class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>2021/11/24</div>
-                <div class="register-link" @click="hiddenCard">忽视</div>
+              <div v-if="showCard2" class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>2021/11/24</div>
+                  <div class="register-link" @click="hiddenCard">忽视</div>
+                </div>
+                <div>xxxxxxx</div>
               </div>
-              <div>xxxxxxx</div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="质疑" name="question">
-            <div class="tab-card"></div>
-          </el-tab-pane>
-          <el-tab-pane label="修订" name="revise">
-            <div class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>症例保存</div>
-                <div>张三 2021/11/24</div>
+            </el-tab-pane>
+            <el-tab-pane label="质疑" name="question">
+              <div class="tab-card"></div>
+            </el-tab-pane>
+            <el-tab-pane label="修订" name="revise">
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>症例保存</div>
+                  <div>张三 2021/11/24</div>
+                </div>
+                <el-divider></el-divider>
+                <div>2021/10/1 -> 2021/10/9</div>
               </div>
-              <el-divider></el-divider>
-              <div>2021/10/1 -> 2021/10/9</div>
-            </div>
-            <div class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>症例保存</div>
-                <div>张三 2021/11/30</div>
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>症例保存</div>
+                  <div>张三 2021/11/30</div>
+                </div>
+                <el-divider></el-divider>
+                <div>男 -> 女</div>
               </div>
-              <el-divider></el-divider>
-              <div>男 -> 女</div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="批注" name="annotation">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 3 }"
-              v-model="annotation"
-              style="margin: 10px; width: -webkit-fill-available;"
-            ></el-input>
-          </el-tab-pane>
-        </el-tabs>
-      </el-aside>
-      <el-aside
-        style="
-          border: 1px solid #fafafa;
-          width: 20px;
-          background-color: #fafafa;
-        "
-      ></el-aside>
+            </el-tab-pane>
+            <el-tab-pane label="批注" name="annotation">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 3 }"
+                v-model="annotation"
+                style="margin: 10px; width: -webkit-fill-available"
+              ></el-input>
+            </el-tab-pane>
+          </el-tabs>
+        </el-aside>
+      </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
+  import Navbar from './components/Navbar.vue'
   import { tree, basicInfo, retentionInfo, complication } from './data'
 
   export default {
-    name: 'InputData',
-    components: {},
+    name: 'SdvInput',
+    components: { Navbar },
     data() {
       return {
+        title: this.$route.query.title,
+        progress: this.$route.query.progress,
+        mode: this.$route.query.mode,
+
         activeName: 'warning',
         treeOptions: tree,
         basicInfo: basicInfo,
@@ -274,7 +256,6 @@
         showComplication: false,
         defaultExpandedKeys: ['1', '11', '12', '13', '14'],
         defaultSelectedKeys: ['111'],
-        title: '',
         folder: [],
         showCard2: true,
         annotation: '',
@@ -283,7 +264,6 @@
     },
     created() {},
     mounted() {
-      this.title = this.$route.query.title
       tree[0].label = this.title
     },
     updated() {
@@ -307,13 +287,6 @@
       close() {
         this.$router.push('home')
       },
-      addClass({ columnIndex }) {
-        let css = 'border-color: black;'
-        if (columnIndex === 0) {
-          css = css.concat('background: #ebf1dd')
-        }
-        return css
-      },
       handleClick(tab, event) {},
       renderTree(h, { node, data, store }) {
         let span = (
@@ -329,7 +302,7 @@
               stroke-width="14"
               percentage="60"
               format={(percentage) => {
-                return `输入${percentage}%`
+                return `SDV${percentage}%`
               }}
               style="margin-left: 10px; width: 120px; font-size: small;"
             />
@@ -378,6 +351,11 @@
 </script>
 
 <style lang="scss" scoped>
+  ::v-deep {
+    .el-header {
+      padding: 0;
+    }
+  }
   .col-label {
     background-color: #ebf1dd;
   }
@@ -388,31 +366,25 @@
     color: black;
     margin-bottom: 10px;
   }
-  .el-row {
-    padding-right: 40px;
-  }
-  .el-table {
-    margin-bottom: 20px;
-  }
-  .el-col {
-    margin: 0 20px 20px 10px;
-  }
+  // .el-table {
+  //   margin-bottom: 20px;
+  // }
   ::v-deep {
     .el-table td {
       padding: 5px 0 !important;
     }
-    .el-table {
-      color: black;
-    }
-    .el-table--border,
-    .el-table--group {
-      border-color: black;
-    }
-    .el-table--border::after,
-    .el-table--group::after,
-    .el-table::before {
-      background-color: black;
-    }
+    // .el-table {
+    //   color: black;
+    // }
+    // .el-table--border,
+    // .el-table--group {
+    //   border-color: black;
+    // }
+    // .el-table--border::after,
+    // .el-table--group::after,
+    // .el-table::before {
+    //   background-color: black;
+    // }
     .el-tabs--top .el-tabs__item.is-top:nth-child(2) {
       padding-left: 20px;
     }
@@ -452,17 +424,6 @@
   }
   .input {
     border: none;
-  }
-  .study-container {
-    padding: 10px 20px;
-    background-color: rgb(202, 236, 245);
-    .study-icon {
-      width: 150px;
-      height: 50px;
-    }
-  }
-  .el-main {
-    padding-right: 0;
   }
   .tab-card {
     border: 1px solid #e9e9eb;
