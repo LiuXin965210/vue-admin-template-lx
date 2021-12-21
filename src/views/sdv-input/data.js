@@ -1,74 +1,62 @@
 export const tree = [
   {
     id: '1',
-    label: 'IMRD-001',
-    icon: 'home',
+    name: 'IMRD-001',
     children: [
       {
         id: '11',
-        label: '登录票',
-        icon: 'folder',
+        name: '登录票',
         children: [
           {
             id: '111',
-            label: '基本情报',
-            icon: 'file',
-            info: 'error',
+            name: '基本情报',
+            status: 'error',
           },
           {
             id: '112',
-            label: '留置信息',
-            icon: 'file',
-            info: 'error',
+            name: '留置信息',
+            status: 'error',
           },
           {
             id: '113',
-            label: '并发症',
-            icon: 'file',
-            info: 'tick',
+            name: '并发症',
+            status: 'over',
           },
         ],
       },
       {
         id: '12',
-        label: '生活调查票',
-        icon: 'folder',
+        name: '生活调查票',
         children: [
           {
             id: '121',
-            label: '1年目',
-            icon: 'folder',
+            name: '1年目',
             children: [
               {
                 id: '1211',
-                label: '生活调查票',
-                icon: 'file',
-                info: 'error',
+                name: '生活调查票',
+                status: 'error',
               },
             ],
           },
           {
             id: '122',
-            label: '2年目',
-            icon: 'folder',
+            name: '2年目',
             children: [
               {
                 id: '1221',
-                label: '生活调查票',
-                icon: 'file',
-                info: 'tick',
+                name: '生活调查票',
+                status: 'over',
               },
             ],
           },
           {
             id: '123',
-            label: '3年目',
-            icon: 'folder',
+            name: '3年目',
             children: [
               {
                 id: '1231',
-                label: '生活调查票',
-                icon: 'file',
+                name: '生活调查票',
               },
             ],
           },
@@ -76,41 +64,34 @@ export const tree = [
       },
       {
         id: '13',
-        label: 'BaseLine',
-        icon: 'folder',
+        name: 'BaseLine',
         children: [
           {
             id: '131',
-            label: '合并症',
-            icon: 'file',
+            name: '合并症',
           },
           {
             id: '132',
-            label: '既往病例',
-            icon: 'file',
-            activate: false,
+            name: '既往病例',
+            disabled: true,
           },
         ],
       },
       {
         id: '14',
-        label: '有害事项',
-        icon: 'folder',
+        name: '有害事项',
         children: [
           {
             id: '141',
-            label: '有害事项1',
-            icon: 'file',
+            name: '有害事项1',
           },
           {
             id: '142',
-            label: '有害事项2',
-            icon: 'file',
+            name: '有害事项2',
           },
           {
             id: '143',
-            label: '有害事项3',
-            icon: 'file',
+            name: '有害事项3',
           },
         ],
       },
@@ -196,7 +177,7 @@ export const complication = [
 function createInput(type, width, right, left) {
   let input = document.createElement('input')
   input.type = type
-  input.className = "inputdata"
+  input.className = 'inputdata'
   input.style.border = 'none'
   input.style.width = width || '100%'
   input.style.height = '100%'

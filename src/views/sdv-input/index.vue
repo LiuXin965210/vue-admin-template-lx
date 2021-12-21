@@ -1,25 +1,54 @@
 <template>
   <div>
     <el-container>
-      <el-header height="auto">
+      <el-header class="input-header">
         <Navbar></Navbar>
       </el-header>
-      <el-container>
-        <el-aside style="border: 1px solid #dfdfdf">
+      <el-container class="input-container">
+        <el-aside style="padding-right: 15px">
           <el-tree
             node-key="id"
-            :default-checked-keys="defaultSelectedKeys"
-            :default-expanded-keys="defaultExpandedKeys"
-            :data="treeOptions"
-            :props="defaultProps"
+            :default-expand-all="true"
             :highlight-current="true"
-            :render-content="renderTree"
             :expand-on-click-node="false"
+            :data="screens"
             @current-change="changeForm"
-          ></el-tree>
+          >
+            <div slot-scope="{ node, data }" style="display: flex; width: 100%">
+              <svg-icon :icon-class="getTreeNodeIcon(node)" />
+              <span style="margin-left: 10px">{{ data.name }}</span>
+              <el-progress
+                v-if="node.level === 1"
+                :text-inside="true"
+                :stroke-width="14"
+                :percentage="60"
+                :format="formatProgress"
+                style="width: 50%; margin-left: 10px"
+              />
+              <span v-else-if="data.disabled" style="margin-left: auto">
+                <el-switch v-model="data.disabled"></el-switch>
+              </span>
+              <span
+                v-else-if="data.status === 'over'"
+                style="margin-left: auto"
+              >
+                <svg-icon icon-class="tick" />
+              </span>
+              <span
+                v-else-if="data.status === 'error'"
+                style="margin-left: auto"
+              >
+                <svg-icon icon-class="error" />
+              </span>
+            </div>
+          </el-tree>
         </el-aside>
-        <!-- <el-scrollbar style="height: 100%"> -->
-        <el-main>
+        <el-main
+          style="
+            border-left: 1px solid #dfdfdf;
+            border-right: 1px solid #dfdfdf;
+          "
+        >
           <el-row v-show="folder.length != 0" :gutter="20">
             <el-tag type="info" class="data-title">【{{ title }}】</el-tag>
             <el-col
@@ -93,12 +122,7 @@
           </el-row>
           <el-row v-show="showBasic">
             <el-tag type="info" class="data-title">【基本情报】</el-tag>
-            <el-table
-              :data="basicInfo"
-              :show-header="false"
-              border
-              :cell-style="addClass"
-            >
+            <el-table :data="basicInfo" :show-header="false" border>
               <el-table-column prop="label" width="300px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
@@ -109,11 +133,7 @@
           </el-row>
           <el-row v-show="showRetention">
             <el-tag type="info" class="data-title">【留置信息】</el-tag>
-            <el-table
-              :data="retentionInfo"
-              :show-header="false"
-              :cell-style="addClass"
-            >
+            <el-table :data="retentionInfo" :show-header="false">
               <el-table-column prop="label" width="200px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
@@ -153,9 +173,8 @@
               </el-table-column>
             </el-table>
           </el-row>
-          <!-- </el-scrollbar> -->
         </el-main>
-        <el-aside style="border: 1px solid #dfdfdf; border-right: none">
+        <el-aside>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="警告" name="warning">
               <div class="tab-card">
@@ -220,9 +239,9 @@
             </el-tab-pane>
             <el-tab-pane label="批注" name="annotation">
               <el-input
+                v-model="annotation"
                 type="textarea"
                 :autosize="{ minRows: 3 }"
-                v-model="annotation"
                 style="margin: 10px; width: -webkit-fill-available"
               ></el-input>
             </el-tab-pane>
@@ -242,12 +261,12 @@
     components: { Navbar },
     data() {
       return {
-        title: this.$route.query.title,
+        title: '',
         progress: this.$route.query.progress,
         mode: this.$route.query.mode,
 
         activeName: 'warning',
-        treeOptions: tree,
+        screens: tree,
         basicInfo: basicInfo,
         showBasic: true,
         retentionInfo: retentionInfo,
@@ -255,7 +274,6 @@
         complication: complication,
         showComplication: false,
         defaultExpandedKeys: ['1', '11', '12', '13', '14'],
-        defaultSelectedKeys: ['111'],
         folder: [],
         showCard2: true,
         annotation: '',
@@ -272,15 +290,22 @@
         let input = inputs[i]
         input.addEventListener('input', () => {
           this.saved = false
-          if (i < 5)
-            this.treeOptions[0].children[0].children[0].icon = 'fileEdit'
+          if (i < 5) this.screens[0].children[0].children[0].icon = 'fileEdit'
           else if (i < 9)
-            this.treeOptions[0].children[0].children[1].icon = 'fileEdit'
-          else this.treeOptions[0].children[0].children[2].icon = 'fileEdit'
+            this.screens[0].children[0].children[1].icon = 'fileEdit'
+          else this.screens[0].children[0].children[2].icon = 'fileEdit'
         })
       }
     },
     methods: {
+      getTreeNodeIcon(node) {
+        if (node.level === 1) return 'home'
+        return node.isLeaf ? 'file' : 'folder'
+      },
+      formatProgress() {
+        return 'SDV60%'
+      },
+
       save() {
         this.$router.push('home')
       },
@@ -288,39 +313,9 @@
         this.$router.push('home')
       },
       handleClick(tab, event) {},
-      renderTree(h, { node, data, store }) {
-        let span = (
-          <span style="display: flex; width: 100%; padding-right: 10px; align-items: center;">
-            <svg-icon icon-class={data.icon} />
-            <span style="margin-left: 10px">{data.label}</span>
-          </span>
-        )
-        if (data.icon == 'home') {
-          span.children.push(
-            <el-progress
-              text-inside="true"
-              stroke-width="14"
-              percentage="60"
-              format={(percentage) => {
-                return `SDV${percentage}%`
-              }}
-              style="margin-left: 10px; width: 120px; font-size: small;"
-            />
-          )
-        } else {
-          span.children.push(
-            <svg-icon icon-class={data.info} style="margin-left: auto" />
-          )
-          if (data.activate !== undefined && !data.activate) {
-            span.data.style += 'font-style: italic; color: #dfdfdf;'
-            span.children.push(<el-switch v-model={data.activate}></el-switch>)
-          }
-        }
-        return span
-      },
       copyComplication() {
         this.complication = this.complication.concat(complication)
-        this.treeOptions[0].children[0].children[2].icon = 'fileEdit'
+        this.screens[0].children[0].children[2].icon = 'fileEdit'
         this.saved = false
       },
       changeForm(data, node) {
@@ -451,5 +446,12 @@
     align-items: center;
     display: flex;
     justify-content: center;
+  }
+  $navbar-height: 78px;
+  .input-header {
+    height: $navbar-height !important;
+  }
+  .input-container {
+    height: calc(100vh - #{$navbar-height}) !important;
   }
 </style>

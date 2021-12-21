@@ -1,10 +1,7 @@
 ﻿<template>
   <div class="navbar-container">
     <div class="icon-container">
-      <img
-        src="@/assets/icon-images/logo.svg"
-        style="width: 150px; height: 50px"
-      />
+      <img src="@/assets/icon-images/logo.svg" style="width: 150px" />
     </div>
     <label style="padding: 10px">IMP_RMD > 症例入力 > {{ title }}</label>
     <div style="margin-left: auto; padding: 10px">
@@ -36,8 +33,12 @@
     display: flex;
     align-items: center;
     background-color: #f5f4f3;
+    height: 100%;
     .icon-container {
-      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 20px;
       background-color: rgb(202, 236, 245);
     }
   }

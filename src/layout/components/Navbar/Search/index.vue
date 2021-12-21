@@ -20,9 +20,9 @@
             v-for="tag in tags"
             :key="tag.name"
             :closable="canEdit"
-            @close="removeTag(tag)"
             :type="tag.type"
             style="margin-right: 10px"
+            @close="removeTag(tag)"
           >
             {{ tag.name }}
           </el-tag>
@@ -33,8 +33,8 @@
       </el-popover>
       <el-input
         v-model="keywords"
-        @change="search"
         class="search-input"
+        @change="search"
       ></el-input>
 
       <el-popover placement="bottom-start" trigger="hover">
@@ -62,10 +62,10 @@
       background
       layout="total, prev, pager, next"
       :current-page="pageNo"
-      @current-change="changePage"
       :page-size="12"
       :total="36"
       style="margin-left: auto"
+      @current-change="changePage"
     ></el-pagination>
     <BatchExecution ref="batchExcution"></BatchExecution>
   </div>
