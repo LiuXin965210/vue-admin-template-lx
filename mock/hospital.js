@@ -4,6 +4,10 @@ const mockData = Mock.mock({
   items: [
     {
       code: '@id',
+      value: '所有可访问研究中心',
+    },
+    {
+      code: '@id',
       value: '华东研究中心',
     },
     {

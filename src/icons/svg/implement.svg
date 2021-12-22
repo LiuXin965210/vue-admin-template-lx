@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   t="1637892201155"
+   class="icon"
+   viewBox="0 0 1024 1024"
+   version="1.1"
+   p-id="20666"
+   width="48"
+   height="48"
+   id="svg12"
+   sodipodi:docname="implement.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="12.344906"
+     inkscape:cx="32.645045"
+     inkscape:cy="20.696796"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style2" />
+  </defs>
+  <path
+     d="M 577.62539,895.95035 H 177.67583 c -61.91541,0 -112.27847,-49.04795 -112.27847,-109.3821 v -596.7907 c 0,-60.33416 50.36306,-109.429126 112.49482,-109.429126 h 479.6403 c 61.91542,0 112.64421,49.095186 112.48566,109.429126 l -0.74702,284.24448 c -0.007,13.29208 -9.92313,24.06336 -22.15281,24.06336 -12.22971,0 -22.1458,-10.77128 -22.15284,-24.06336 l 0.74701,-284.38556 c 0.0887,-33.76443 -30.49424,-61.13359 -67.96368,-61.13359 H 177.67583 c -37.46942,0 -67.97282,27.46309 -67.97282,61.13359 v 596.79071 c 0,33.76454 30.28706,61.13359 67.97282,61.13359 h 399.94956 c 12.23191,0.003 22.14575,10.78274 22.14575,24.07723 0,13.29448 -9.91384,24.07299 -22.14575,24.07723 z"
+     fill="#040000"
+     p-id="20667"
+     id="path6"
+     style="stroke-width:0.874089"
+     sodipodi:nodetypes="csssssscscsssssscscc" />
+  <path
+     d="m 756.41084,925.40945 c -80.3631,0 -152.81371,-48.40987 -183.56558,-122.65438 -30.75181,-74.24432 -13.74839,-159.70093 43.07664,-216.52598 56.82506,-56.82505 142.28166,-73.82847 216.52599,-43.07665 74.2445,30.75187 122.6544,103.20248 122.6544,183.56558 -0.1446,109.67431 -89.01714,198.54685 -198.69145,198.69143 z m 0,-371.14061 c -69.74912,0 -132.63076,42.01612 -159.32106,106.45474 -26.69027,64.43849 -11.93258,138.60836 37.38728,187.92821 49.31984,49.31985 123.48972,64.07756 187.92821,37.38729 64.4386,-26.69033 106.45474,-89.57197 106.45474,-159.32106 -0.062,-95.23359 -77.21566,-172.43761 -172.44917,-172.56164 z"
+     fill="#2c2c2c"
+     p-id="20668"
+     data-spm-anchor-id="a313x.7781069.0.i29"
+     class=""
+     id="path8"
+     sodipodi:nodetypes="cssscccsssccc"
+     style="stroke-width:0.726458" />
+  <path
+     d="m 883.68175,717.64318 c 0,0 -127.77895,-98.30177 -129.69074,-98.30177 -11.60415,-3.86805 -15.4722,5.77984 -15.4722,13.3381 0,7.55824 0,194.69173 1.91181,194.69173 3.86804,9.64788 13.56039,9.64788 21.29648,5.77983 7.73609,-3.86805 118.08659,-94.43371 120.04286,-96.3455 5.82429,-3.86804 11.6486,-11.60416 1.95625,-19.34024 z M 696.94841,848.17865 A 12.404427,12.404427 0 0 1 684.544,835.77423 V 624.00975 a 12.404427,12.404427 0 1 1 24.80885,0 v 211.76448 a 12.404427,12.404427 0 0 1 -12.40444,12.40442 z"
+     fill="#ea9518"
+     p-id="20669"
+     data-spm-anchor-id="a313x.7781069.0.i27"
+     class="selected"
+     id="path10"
+     style="stroke-width:0.861548" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1">
+    <text
+       xml:space="preserve"
+       style="font-size:495.22px;line-height:1.25;font-family:STHupo;-inkscape-font-specification:'STHupo, Normal';font-variant-ligatures:none;stroke-width:32.7567"
+       x="197.2049"
+       y="717.26526"
+       id="text1509"><tspan
+         sodipodi:role="line"
+         id="tspan1507"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:655.138px;font-family:'Microsoft YaHei';-inkscape-font-specification:'Microsoft YaHei, Bold';font-variant-ligatures:none;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ff0000;stroke-width:32.7567"
+         x="197.2049"
+         y="717.26526">5</tspan></text>
+  </g>
+</svg>

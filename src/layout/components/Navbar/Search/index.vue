@@ -33,8 +33,9 @@
       </el-popover>
       <el-input
         v-model="keywords"
-        class="search-input"
         @change="search"
+        size="mini"
+        style="width: 400px"
       ></el-input>
 
       <el-popover placement="bottom-start" trigger="hover">
@@ -50,12 +51,20 @@
         </span>
       </el-popover>
     </div>
-    <el-link @click="openBatchExecution">
-      <svg-icon icon-class="document" />
+    <el-link
+      @click="openBatchExecution"
+      :underline="false"
+      style="margin-left: 15px; font-size: 16px"
+    >
+      <svg-icon icon-class="implement" style="width: 1.5em; height: 1.5em" />
       执行
     </el-link>
-    <el-link style="margin-left: 15px">
-      <svg-icon icon-class="document" />
+    <el-link
+      @click="openDocInput"
+      style="margin-left: 15px; font-size: 16px"
+      :underline="false"
+    >
+      <svg-icon icon-class="add-user" style="width: 1.5em; height: 1.5em" />
       创建
     </el-link>
     <el-pagination
@@ -110,6 +119,9 @@
         this.canEdit = !this.canEdit
       },
       changePage() {},
+      openDocInput(title) {
+        this.$router.push({ path: 'input-data', query: { title } })
+      },
       openBatchExecution() {
         this.$refs['batchExcution'].show()
       },
@@ -143,11 +155,11 @@
   }
   ::v-deep {
     .el-input {
-      input {
-        border: 0;
-        width: 400px;
-        height: 20px;
-      }
+      // input {
+      //   border: 0;
+      //   width: 400px;
+      //   height: 20px;
+      // }
     }
   }
 </style>

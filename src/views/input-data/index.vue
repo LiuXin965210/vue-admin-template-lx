@@ -5,7 +5,7 @@
         <img src="@/assets/icon-images/logo.svg" class="study-icon" />
       </div>
       <label style="padding: 10px;">IMP_RMD > 症例入力 > {{ title }}</label>
-      <div style="margin-left: auto; padding: 10px;">
+      <div style="margin-left: auto; padding-right: 10px;">
         <el-button type="primary" :disabled="saved" @click="save">
           保 存
         </el-button>
@@ -13,17 +13,17 @@
       </div>
     </div>
 
-    <el-container style="height: 650px;">
+    <el-container style="height: 700px;">
       <el-aside style="border: 1px solid #dfdfdf;">
         <el-tree
           node-key="id"
           :default-checked-keys="defaultSelectedKeys"
           :default-expanded-keys="defaultExpandedKeys"
           :data="treeOptions"
-          :props="defaultProps"
           :highlight-current="true"
           :render-content="renderTree"
           :expand-on-click-node="false"
+          :current-node-key="defaultSelectedKeys[0]"
           @current-change="changeForm"
         ></el-tree>
       </el-aside>
@@ -109,7 +109,10 @@
               <el-table-column prop="label" width="300px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
-                  <span v-html="scope.row.value"></span>
+                  <div
+                    v-html="scope.row.value"
+                    :style="`height: ${scope.row.height || '40px'}`"
+                  ></div>
                 </template>
               </el-table-column>
             </el-table>
@@ -119,13 +122,16 @@
             <el-table
               :data="retentionInfo"
               :show-header="false"
-              border="1px solid black"
+              border
               :cell-style="addClass"
             >
               <el-table-column prop="label" width="200px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
-                  <span v-html="scope.row.value"></span>
+                  <div
+                    v-html="scope.row.value"
+                    :style="`height: ${scope.row.height || '40px'}`"
+                  ></div>
                 </template>
               </el-table-column>
             </el-table>
@@ -155,103 +161,242 @@
             <el-table
               :data="complication"
               :show-header="false"
-              border="1px solid black"
-              :cell-style="addClass"
+              border
+              :cell-style="addSpanClass"
+              :span-method="arraySpan"
             >
+              <el-table-column prop="no" width="50px"></el-table-column>
               <el-table-column prop="label" width="250px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
-                  <span v-html="scope.row.value"></span>
+                  <div
+                    v-html="scope.row.value"
+                    :style="`height: ${scope.row.height || '40px'}`"
+                  ></div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-row>
+          <el-row v-show="showBefore">
+            <div v-show="!tableDisabled.activate" class="float-disabled"></div>
+            <el-tag type="info" class="data-title">【既往病例】</el-tag>
+            <el-table
+              :data="basicInfo"
+              :show-header="false"
+              border
+              :cell-style="addClass"
+              style="border-color: black;"
+            >
+              <el-table-column prop="label" width="300px"></el-table-column>
+              <el-table-column prop="value">
+                <template slot-scope="scope">
+                  <div
+                    v-html="scope.row.value"
+                    :style="`height: ${scope.row.height || '40px'}`"
+                  ></div>
                 </template>
               </el-table-column>
             </el-table>
           </el-row>
         </el-scrollbar>
       </el-main>
-      <el-aside style="border: 1px solid #dfdfdf; border-right: none;">
-        <el-tabs
-          v-model="activeName"
-          style="height: 609px;"
-          @tab-click="handleClick"
-        >
-          <el-tab-pane label="警告" name="warning">
-            <div class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>2021/11/24</div>
-                <svg-icon icon-class="error-check" />
+      <el-aside
+        :style="`border: 1px solid #dfdfdf; border-right: none; width: ${
+          tabsShow ? '300px' : '0px'
+        };`"
+      >
+        <div :class="tabsShow ? 'tabsShow' : 'tabsHidden'">
+          <el-tabs
+            v-model="activeName"
+            style="height: 659px;"
+            @tab-click="handleClick"
+          >
+            <el-tab-pane label="警告" name="warning">
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>2021/11/24</div>
+                  <svg-icon icon-class="error-check" />
+                </div>
+                <div>请输入同意取得日。</div>
               </div>
-              <div>请输入同意取得日。</div>
-            </div>
-            <div v-if="showCard2" class="tab-card">
               <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
+                :disabled="!showCard2"
+                class="tab-card"
+                :style="`background-color: ${showCard2 ? 'white' : '#dfdfdf'}`"
               >
-                <div>2021/11/24</div>
-                <div class="register-link" @click="hiddenCard">忽视</div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>2021/11/24</div>
+                  <div
+                    v-if="!showCard2"
+                    class="register-link"
+                    @click="ignoreCard"
+                  >
+                    取消忽视
+                  </div>
+                  <div
+                    v-if="showCard2"
+                    class="register-link"
+                    @click="ignoreCard"
+                  >
+                    忽视
+                  </div>
+                </div>
+                <div>xxxxxxx</div>
               </div>
-              <div>xxxxxxx</div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="质疑" name="question">
-            <div class="tab-card"></div>
-          </el-tab-pane>
-          <el-tab-pane label="修订" name="revise">
-            <div class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>症例保存</div>
-                <div>张三 2021/11/24</div>
+            </el-tab-pane>
+            <el-tab-pane label="质疑" name="query">
+              <div class="tab-query-card">
+                <div style="display: flex;">
+                  <label style="font-weight: bold;">Query00121</label>
+                  <div class="query-status" style="background-color: #409eff;">
+                    待发行
+                  </div>
+                </div>
+                <div class="title">质疑</div>
+                <div class="tab-query-card">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  张三 2021/11/25 数据核查提出
+                </div>
+                <div class="title">回答</div>
+                <div class="tab-query-card">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  李四 2021/11/26
+                </div>
+                <div class="title">再提问</div>
+                <div class="tab-query-card">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  张三 2021/11/27
+                </div>
+                <div class="title">
+                  回答
+                  <i class="el-icon-add-location"></i>
+                </div>
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 3 }"
+                  v-model="query2"
+                  style="width: -webkit-fill-available; font-size: 12px;"
+                ></el-input>
+                <div style="margin-top: 10px; text-align: right;">
+                  <el-button type="primary">OK</el-button>
+                  <el-button type="primary">取消</el-button>
+                </div>
               </div>
-              <el-divider></el-divider>
-              <div>2021/10/1 -> 2021/10/9</div>
-            </div>
-            <div class="tab-card">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div>症例保存</div>
-                <div>张三 2021/11/30</div>
+              <div class="tab-query-card">
+                <div style="display: flex;">
+                  <label style="font-weight: bold;">Query00122</label>
+                  <div class="query-status" style="background-color: #e6a23c;">
+                    待回答
+                  </div>
+                </div>
+                <div class="title">质疑</div>
+                <div class="tab-query-card">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  张三 2021/11/25 数据核查提出
+                </div>
+                <div class="title">
+                  回答
+                  <i class="el-icon-add-location"></i>
+                </div>
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 3 }"
+                  v-model="query2"
+                  style="width: -webkit-fill-available; font-size: 12px;"
+                ></el-input>
+                <div style="margin-top: 10px; text-align: right;">
+                  <el-button type="primary">OK</el-button>
+                  <el-button type="primary">取消</el-button>
+                </div>
               </div>
-              <el-divider></el-divider>
-              <div>男 -> 女</div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="批注" name="annotation">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 3 }"
-              v-model="annotation"
-              style="margin: 10px; width: -webkit-fill-available;"
-            ></el-input>
-          </el-tab-pane>
-        </el-tabs>
+              <el-button type="primary" style="margin: 10px;">
+                追加
+              </el-button>
+            </el-tab-pane>
+            <el-tab-pane label="修订" name="revise">
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>症例保存</div>
+                  <div>张三 2021/11/24</div>
+                </div>
+                <el-divider></el-divider>
+                <div>2021/10/1 -> 2021/10/9</div>
+              </div>
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>症例保存</div>
+                  <div>张三 2021/11/30</div>
+                </div>
+                <el-divider></el-divider>
+                <div>男 -> 女</div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="批注" name="annotation">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 3 }"
+                v-model="annotation"
+                style="margin: 10px; width: -webkit-fill-available;"
+              ></el-input>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
       </el-aside>
       <el-aside
         style="
-          border: 1px solid #fafafa;
+          border-top: 1px solid #dfdfdf;
+          border-bottom: 1px solid #dfdfdf;
+          border-left: 1px solid #fafafa;
+          border-right: 1px solid #fafafa;
           width: 20px;
           background-color: #fafafa;
         "
-      ></el-aside>
+      >
+        <i
+          v-show="tabsShow"
+          class="el-icon-s-unfold"
+          style="margin-top: 10px;"
+          @click="showTabs"
+        ></i>
+        <i
+          v-show="!tabsShow"
+          class="el-icon-s-fold"
+          style="margin-top: 10px;"
+          @click="showTabs"
+        ></i>
+      </el-aside>
     </el-container>
   </div>
 </template>
@@ -273,36 +418,60 @@
         complication: complication,
         showComplication: false,
         defaultExpandedKeys: ['1', '11', '12', '13', '14'],
-        defaultSelectedKeys: ['111'],
+        defaultSelectedKeys: ['10'],
         title: '',
         folder: [],
         showCard2: true,
         annotation: '',
         saved: true,
+        counter: 1,
+        showBefore: false,
+        tableDisabled: tree[0].children[3].children[1],
+        query1: '',
+        query2: '',
+        tabsShow: true,
       }
     },
     created() {},
     mounted() {
       this.title = this.$route.query.title
-      tree[0].label = this.title
+      this.treeOptions[0].label = this.title
     },
     updated() {
       let inputs = document.getElementsByClassName('inputdata')
-      for (let i in inputs) {
+      for (let i = 0; i < inputs.length; i++) {
         let input = inputs[i]
         input.addEventListener('input', () => {
           this.saved = false
-          if (i < 5)
-            this.treeOptions[0].children[0].children[0].icon = 'fileEdit'
+          if (i < 5) this.treeOptions[0].children[0].icon = 'fileEdit'
           else if (i < 9)
-            this.treeOptions[0].children[0].children[1].icon = 'fileEdit'
-          else this.treeOptions[0].children[0].children[2].icon = 'fileEdit'
+            this.treeOptions[0].children[1].children[0].icon = 'fileEdit'
+          else this.treeOptions[0].children[1].children[1].icon = 'fileEdit'
+        })
+        let parent = input.parentElement
+        input.addEventListener('focus', () => {
+          parent.style.border = '3px solid #5292F7'
+          parent.style.padding = 0
+        })
+        input.addEventListener('blur', () => {
+          parent.style.border = 'none'
+          parent.style.padding = '3px 0 2px'
         })
       }
     },
     methods: {
       save() {
-        this.$router.push('home')
+        let inputs = document.getElementsByClassName('inputdata')
+        if (inputs[2].value == '') {
+          let parent = inputs[2].parentElement
+          parent.style.border = '3px solid red'
+          parent.style.padding = 0
+        } else {
+          this.treeOptions[0].children[0].icon = 'file'
+          this.treeOptions[0].children[1].children[0].icon = 'file'
+          this.treeOptions[0].children[1].children[1].icon = 'file'
+          this.$router.push('home')
+        }
       },
       close() {
         this.$router.push('home')
@@ -314,20 +483,29 @@
         }
         return css
       },
+      addSpanClass({ columnIndex }) {
+        let css = 'border-color: black;'
+        if (columnIndex === 0 || columnIndex === 1) {
+          css = css.concat('background: #ebf1dd')
+        }
+        return css
+      },
       handleClick(tab, event) {},
       renderTree(h, { node, data, store }) {
         let span = (
-          <span style="display: flex; width: 100%; padding-right: 10px; align-items: center;">
+          <span style="display: flex; width: 100%; padding-right: 10px; align-items: center; font-size: 14px;">
             <svg-icon icon-class={data.icon} />
-            <span style="margin-left: 10px">{data.label}</span>
+            <span style="margin-left: 6px;">{data.label}</span>
           </span>
         )
         if (data.icon == 'home') {
+          span.data.style += 'color: black; height: 40px;'
+          span.children[1].data.style += 'font-weight: bold;'
           span.children.push(
             <el-progress
-              text-inside="true"
-              stroke-width="14"
-              percentage="60"
+              text-inside={true}
+              stroke-width={20}
+              percentage={60}
               format={(percentage) => {
                 return `输入${percentage}%`
               }}
@@ -335,19 +513,34 @@
             />
           )
         } else {
-          span.children.push(
-            <svg-icon icon-class={data.info} style="margin-left: auto" />
-          )
-          if (data.activate !== undefined && !data.activate) {
-            span.data.style += 'font-style: italic; color: #dfdfdf;'
-            span.children.push(<el-switch v-model={data.activate}></el-switch>)
+          if (data.info) {
+            span.children.push(
+              <svg-icon icon-class={data.info} style="margin-left: auto" />
+            )
+          }
+          if (data.activate !== undefined) {
+            span.children.push(
+              <el-switch
+                v-model={data.activate}
+                style="margin-left: auto"
+              ></el-switch>
+            )
+            if (!data.activate)
+              span.data.style += 'font-style: italic; color: #dedede;'
+            else span.data.style += 'color: #9d9d9d;'
+          } else if (data.saved) {
+            span.data.style += 'color: black;'
+          } else {
+            span.data.style += 'color: #9d9d9d;'
           }
         }
         return span
       },
       copyComplication() {
-        this.complication = this.complication.concat(complication)
-        this.treeOptions[0].children[0].children[2].icon = 'fileEdit'
+        let data = JSON.parse(JSON.stringify(complication))
+        data[0].no = ++this.counter
+        this.complication = this.complication.concat(data)
+        this.treeOptions[0].children[1].children[1].icon = 'fileEdit'
         this.saved = false
       },
       changeForm(data, node) {
@@ -357,9 +550,10 @@
             if (child.children) this.folder.push(child)
           }
         }
-        this.showBasic = this.isShowForm(data, '111')
-        this.showRetention = this.isShowForm(data, '112')
-        this.showComplication = this.isShowForm(data, '113')
+        this.showBasic = this.isShowForm(data, '10')
+        this.showRetention = this.isShowForm(data, '111')
+        this.showComplication = this.isShowForm(data, '112')
+        this.showBefore = this.isShowForm(data, '132')
       },
       isShowForm(data, id) {
         if (data.id == id) return true
@@ -370,8 +564,30 @@
         }
         return false
       },
-      hiddenCard() {
-        this.showCard2 = false
+      async ignoreCard() {
+        const info = this.showCard2
+          ? '是否忽视此警告？'
+          : '是否取消忽视此警告？'
+        const configResult = await this.$confirm(info, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).catch((err) => err)
+        if (configResult == 'confirm') this.showCard2 = !this.showCard2
+      },
+      arraySpan({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0) {
+          if (rowIndex % 3 === 0) return [3, 1]
+          else return [0, 0]
+        }
+        if (columnIndex === 1) {
+          if (rowIndex % 3 === 0) return [2, 1]
+          else if (rowIndex % 3 === 2) return [1, 1]
+          else return [0, 0]
+        }
+      },
+      showTabs() {
+        this.tabsShow = !this.tabsShow
       },
     },
   }
@@ -397,9 +613,98 @@
   .el-col {
     margin: 0 20px 20px 10px;
   }
+  .input {
+    border: none;
+  }
+  .study-container {
+    padding: 10px 10px 6px;
+    background-color: rgb(202, 236, 245);
+    .study-icon {
+      width: 90px;
+      height: 30px;
+    }
+  }
+  .el-main {
+    padding-right: 0;
+  }
+  .tab-card {
+    border: 1px solid #e9e9eb;
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  .tab-query-card {
+    border: 1px solid #e9e9eb;
+    background-color: #fafafa;
+    margin: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    word-break: break-word;
+    .tab-query-card {
+      margin: 0;
+      font-size: 12px;
+    }
+    .title {
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+    .el-button {
+      padding: 0;
+      width: 40px;
+      height: 20px;
+    }
+  }
+  .register-link {
+    float: right;
+    color: $base-font-color-a;
+    cursor: pointer;
+  }
+  .folder-error-count td {
+    padding: 0 10px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .circular {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    color: white;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+  .table-td-input {
+    padding: 5px 0;
+    display: flex;
+  }
+  .float-disabled {
+    margin-right: 40px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 9;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  .query-status {
+    color: white;
+    padding: 1px 4px;
+    font-size: 12px;
+    margin-left: 5px;
+    border-radius: 10px;
+  }
+
   ::v-deep {
+    .el-button {
+      padding: 8px 20px;
+    }
     .el-table td {
-      padding: 5px 0 !important;
+      padding: 0;
+      vertical-align: middle;
     }
     .el-table {
       color: black;
@@ -422,6 +727,7 @@
     .el-tabs__content {
       height: 100%;
       overflow-y: hidden;
+      background-color: #fafafa;
     }
     .el-tabs__content:hover {
       overflow-y: auto;
@@ -449,46 +755,27 @@
     .el-scrollbar__wrap {
       overflow-x: hidden;
     }
-  }
-  .input {
-    border: none;
-  }
-  .study-container {
-    padding: 10px 20px;
-    background-color: rgb(202, 236, 245);
-    .study-icon {
-      width: 150px;
-      height: 50px;
+    .el-tree-node__content {
+      height: auto;
     }
-  }
-  .el-main {
-    padding-right: 0;
-  }
-  .tab-card {
-    border: 1px solid #e9e9eb;
-    background-color: white;
-    margin: 10px;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 4px;
-  }
-  .register-link {
-    float: right;
-    color: $base-font-color-a;
-    cursor: pointer;
-  }
-  .folder-error-count td {
-    padding: 0 10px;
-    vertical-align: middle;
-    text-align: center;
-  }
-  .circular {
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
-    color: white;
-    align-items: center;
-    display: flex;
-    justify-content: center;
+    .sub-comments-leave-active,
+    .sub-comments-enter-active {
+      transition: max-width 0.3s;
+    }
+    .sub-comments-enter,
+    .sub-comments-leave-to {
+      max-width: 0;
+    }
+    .sub-comments-enter-to,
+    .sub-comments-leave {
+      max-width: 300px;
+    }
+    .tabsShow {
+      transition: all 5s ease-out;
+    }
+    .tabsHidden {
+      transition: all 5s ease-in;
+      width: 0;
+    }
   }
 </style>

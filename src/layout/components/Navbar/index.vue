@@ -4,19 +4,28 @@
       <img src="@/assets/icon-images/logo.svg" class="study-icon" />
       <div class="study-title">IMP_RMD</div>
     </div>
-    <el-tabs type="border-card" style="height: 100%; width: 100%">
-      <el-tab-pane label="受试者">
+    <el-tabs
+      type="border-card"
+      style="height: 100%; width: 100%"
+      @tab-click="handleClick"
+    >
+      <el-tab-pane label="受试者" name="patient">
         <Search></Search>
       </el-tab-pane>
-      <el-tab-pane label="质问">
+      <el-tab-pane label="质疑" name="query">
         <Search></Search>
       </el-tab-pane>
-      <el-tab-pane label="警告">
+      <el-tab-pane label="警告" name="warning">
         <Search></Search>
       </el-tab-pane>
     </el-tabs>
     <div class="user-container">
-      <el-select v-model="curRole" filterable placeholder="请选择研究者">
+      <el-select
+        v-model="curRole"
+        size="mini"
+        filterable
+        placeholder="请选择研究者"
+      >
         <el-option
           v-for="item in roles"
           :key="item.value"
@@ -24,7 +33,12 @@
           :value="item.code"
         ></el-option>
       </el-select>
-      <el-select v-model="curHospital" filterable placeholder="请选择研究中心">
+      <el-select
+        v-model="curHospital"
+        size="mini"
+        filterable
+        placeholder="请选择研究中心"
+      >
         <el-option
           v-for="item in hospitals"
           :key="item.value"
@@ -87,6 +101,19 @@
           this.$router.push(`/login?redirect=${this.$route.fullPath}`)
         })
       },
+      handleClick(tab, event) {
+        switch (tab.name) {
+          case 'patient':
+            this.$router.push('/home')
+            break
+          case 'query':
+            this.$router.push('/query')
+            break
+          case 'warning':
+            this.$router.push('/warning')
+            break
+        }
+      },
     },
   }
 </script>
@@ -101,7 +128,7 @@
 
     .study {
       &-container {
-        padding: 10px 20px;
+        padding: 5px 20px;
         background-color: rgb(202, 236, 245);
       }
       &-icon {
@@ -110,7 +137,7 @@
       }
       &-title {
         text-align: center;
-        margin-top: 10px;
+        margin-top: 5px;
         font-weight: $base-font-weight-title;
         font-size: $base-font-size-title;
       }
@@ -136,10 +163,16 @@
         border-top-color: #dcdfe6;
       }
       .el-tabs__item {
-        height: 50px;
+        height: 45px;
         width: 120px;
-        line-height: 50px;
+        line-height: 45px;
         font-size: 16px;
+      }
+      .el-tabs--border-card > .el-tabs__content {
+        padding: 8px 15px;
+      }
+      .el-input__inner {
+        font-size: 15px;
       }
     }
   }

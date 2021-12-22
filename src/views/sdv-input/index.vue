@@ -5,7 +5,9 @@
         <Navbar></Navbar>
       </el-header>
       <el-container class="input-container">
-        <el-aside style="padding-right: 15px">
+        <el-aside
+          style="padding-top: 10px; padding-right: 15px; font-size: small"
+        >
           <el-tree
             node-key="id"
             :default-expand-all="true"
@@ -16,16 +18,21 @@
           >
             <div slot-scope="{ node, data }" style="display: flex; width: 100%">
               <svg-icon :icon-class="getTreeNodeIcon(node)" />
-              <span style="margin-left: 10px">{{ data.name }}</span>
+              <span class="tree-node-label">
+                {{ data.name }}
+              </span>
               <el-progress
                 v-if="node.level === 1"
                 :text-inside="true"
-                :stroke-width="14"
+                :stroke-width="20"
                 :percentage="60"
                 :format="formatProgress"
                 style="width: 50%; margin-left: 10px"
               />
-              <span v-else-if="data.disabled" style="margin-left: auto">
+              <span
+                v-else-if="data.disabled !== undefined"
+                style="margin-left: auto"
+              >
                 <el-switch v-model="data.disabled"></el-switch>
               </span>
               <span
@@ -40,6 +47,12 @@
               >
                 <svg-icon icon-class="error" />
               </span>
+              <span
+                v-if="node.isLeaf && data.disabled === undefined"
+                class="progress-info"
+              >
+                {{ data.sdvProgress }}
+              </span>
             </div>
           </el-tree>
         </el-aside>
@@ -50,7 +63,15 @@
           "
         >
           <el-row v-show="folder.length != 0" :gutter="20">
-            <el-tag type="info" class="data-title">【{{ title }}】</el-tag>
+            <div class="data-title">
+              【IMRD-001】
+              <el-button type="primary" size="mini" style="margin-left: 590px">
+                SDV完了
+              </el-button>
+              <el-button type="primary" size="mini" style="margin-left: 10px">
+                SDV取消
+              </el-button>
+            </div>
             <el-col
               v-for="item of folder"
               :key="item.id"
@@ -60,8 +81,12 @@
               <el-card class="card-item">
                 <div>
                   <div style="display: flex; align-items: center">
-                    <svg-icon :icon-class="item.icon" />
-                    <span style="margin-left: 10px">{{ item.label }}</span>
+                    <svg-icon icon-class="folder" />
+                    <span style="margin-left: 10px">{{ item.name }}</span>
+                    <el-checkbox
+                      style="margin-left: auto"
+                      v-model="checked"
+                    ></el-checkbox>
                   </div>
                   <div
                     style="
@@ -72,18 +97,18 @@
                     "
                   >
                     <el-progress
-                      :width="48"
+                      :width="50"
                       :stroke-width="4"
                       type="circle"
-                      :percentage="70"
-                      :format="formatCheck"
+                      :percentage="20"
+                      :format="formatSdv"
                     />
                     <el-progress
-                      :width="48"
+                      :width="50"
                       :stroke-width="4"
                       type="circle"
                       :percentage="70"
-                      :format="formatCheck"
+                      :format="formatInput"
                     />
                     <div class="folder-error-count">
                       <tr>
@@ -120,9 +145,19 @@
               </el-card>
             </el-col>
           </el-row>
-          <el-row v-show="showBasic">
-            <el-tag type="info" class="data-title">【基本情报】</el-tag>
-            <el-table :data="basicInfo" :show-header="false" border>
+          <el-row v-show="showBasic" style="margin-bottom: 25px">
+            <div type="info" class="data-title">
+              【基本情报】
+              <el-checkbox v-model="checked" style="float: right">
+                全部SDV
+              </el-checkbox>
+            </div>
+            <el-table
+              :data="basicInfo"
+              :show-header="false"
+              border
+              :cell-style="addColClass"
+            >
               <el-table-column prop="label" width="300px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
@@ -131,9 +166,19 @@
               </el-table-column>
             </el-table>
           </el-row>
-          <el-row v-show="showRetention">
-            <el-tag type="info" class="data-title">【留置信息】</el-tag>
-            <el-table :data="retentionInfo" :show-header="false">
+          <el-row v-show="showRetention" style="margin-bottom: 25px">
+            <div type="info" class="data-title">
+              【留置信息】
+              <el-checkbox v-model="checked" style="float: right">
+                全部SDV
+              </el-checkbox>
+            </div>
+            <el-table
+              :data="retentionInfo"
+              :show-header="false"
+              border
+              :cell-style="addColClass"
+            >
               <el-table-column prop="label" width="200px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
@@ -142,14 +187,10 @@
               </el-table-column>
             </el-table>
           </el-row>
-          <el-row v-show="showComplication">
-            <el-tag
-              type="info"
-              class="data-title"
-              style="display: flex; align-items: center"
-            >
+          <el-row v-show="showComplication" style="margin-bottom: 25px">
+            <div type="info" class="data-title">
               【并发症】
-              <el-button
+              <!-- <el-button
                 icon="el-icon-plus"
                 style="
                   margin-left: auto;
@@ -162,9 +203,17 @@
                 @click="copyComplication"
               >
                 追加
-              </el-button>
-            </el-tag>
-            <el-table :data="complication" :show-header="false">
+              </el-button> -->
+              <el-checkbox v-model="checked" style="float: right">
+                全部SDV
+              </el-checkbox>
+            </div>
+            <el-table
+              :data="complication"
+              :show-header="false"
+              border
+              :cell-style="addColClass"
+            >
               <el-table-column prop="label" width="250px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
@@ -261,7 +310,7 @@
     components: { Navbar },
     data() {
       return {
-        title: '',
+        checked: false,
         progress: this.$route.query.progress,
         mode: this.$route.query.mode,
 
@@ -281,21 +330,19 @@
       }
     },
     created() {},
-    mounted() {
-      tree[0].label = this.title
-    },
+    mounted() {},
     updated() {
-      let inputs = document.getElementsByClassName('inputdata')
-      for (let i in inputs) {
-        let input = inputs[i]
-        input.addEventListener('input', () => {
-          this.saved = false
-          if (i < 5) this.screens[0].children[0].children[0].icon = 'fileEdit'
-          else if (i < 9)
-            this.screens[0].children[0].children[1].icon = 'fileEdit'
-          else this.screens[0].children[0].children[2].icon = 'fileEdit'
-        })
-      }
+      // let inputs = document.getElementsByClassName('inputdata')
+      // for (let i in inputs) {
+      //   let input = inputs[i]
+      //   input.addEventListener('input', () => {
+      //     this.saved = false
+      //     if (i < 5) this.screens[0].children[0].children[0].icon = 'fileEdit'
+      //     else if (i < 9)
+      //       this.screens[0].children[0].children[1].icon = 'fileEdit'
+      //     else this.screens[0].children[0].children[2].icon = 'fileEdit'
+      //   })
+      // }
     },
     methods: {
       getTreeNodeIcon(node) {
@@ -304,6 +351,15 @@
       },
       formatProgress() {
         return 'SDV60%'
+      },
+      formatInput(percentage) {
+        return 'SDV\r\n' + percentage
+      },
+      formatSdv(percentage) {
+        return '输入\r\n' + percentage
+      },
+      addColClass({ columnIndex }) {
+        if (columnIndex == 0) return { background: '#ebf1dd' }
       },
 
       save() {
@@ -350,16 +406,49 @@
     .el-header {
       padding: 0;
     }
+    .el-table td,
+    .el-table th.is-leaf,
+    .el-table--border,
+    .el-table--group {
+      border-color: black;
+    }
+    .el-table--border::after,
+    .el-table--group::after,
+    .el-table::before {
+      background-color: black;
+    }
   }
+
+  .progress-info {
+    width: 60px;
+    margin-left: auto;
+    font-size: 12px;
+    background-color: rgb(246, 237, 222);
+    text-align: center;
+    border-radius: 4px;
+    line-height: 18px;
+  }
+
+  .tree-node-label {
+    margin-left: 10px;
+    width: 80px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   .col-label {
     background-color: #ebf1dd;
   }
   .data-title {
     width: 100%;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     color: black;
     margin-bottom: 10px;
+    background-color: #f4f4f5;
+    border: 1px solid #e9e9eb;
+    border-radius: 4px;
+    padding: 10px 10px;
   }
   // .el-table {
   //   margin-bottom: 20px;
@@ -398,24 +487,6 @@
       background: 0 0;
       border-top: 1px dashed $base-color-grey;
     }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      position: relative;
-      display: block;
-      width: 0;
-      height: 0;
-      cursor: pointer;
-      border-radius: 20px;
-      background-color: rgba(144, 147, 153, 0.3);
-      -webkit-transition: 0.3s background-color;
-      transition: 0.3s background-color;
-    }
-    .el-scrollbar__wrap {
-      overflow-x: hidden;
-    }
   }
   .input {
     border: none;
@@ -447,7 +518,8 @@
     display: flex;
     justify-content: center;
   }
-  $navbar-height: 78px;
+
+  $navbar-height: 60px;
   .input-header {
     height: $navbar-height !important;
   }

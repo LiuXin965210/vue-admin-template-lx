@@ -12,9 +12,14 @@
         :lg="6"
         :xl="6"
       >
-        <el-card>
+        <el-card class="card-item">
           <div class="card-title-container">
-            <div class="card-title-content">{{ item.docNumber }}</div>
+            <div
+              class="card-title-content text-truncate"
+              @click="openDocInput(item.docNumber)"
+            >
+              {{ item.docNumber }}
+            </div>
             <div class="card-title-buttons">
               <svg-icon
                 :style="{ fill: item.stared ? '#FFEC00' : '#DEDEDE' }"
@@ -41,9 +46,11 @@
               </el-dropdown> -->
             </div>
           </div>
-          <div>{{ item.hospitalName }}</div>
-          <div>患者识别番号：{{ item.patientNumber }}</div>
-          <div>出生日期：{{ item.birthday }}</div>
+          <div class="text-truncate">{{ item.hospitalName }}</div>
+          <div class="text-truncate">
+            患者识别番号：{{ item.patientNumber }}
+          </div>
+          <div class="text-truncate">出生日期：{{ item.birthday }}</div>
           <div
             class="card-progress-input"
             @click.stop="openDocInput(item.docNumber)"
@@ -100,11 +107,17 @@
               />
             </div>
           </div>
-          <div v-if="keywords !== ''">
+          <div v-if="keywords !== ''" style="height: 30px">
             <el-divider></el-divider>
             <div class="search-info">
-              登陆票 > 基本情报 > 姓名
-              <span>{{ keywords }}</span>
+              <span>
+                登录票 > 基本情报 > 姓名
+                <span class="keywords">{{ keywords }}</span>
+              </span>
+              <span v-if="index % 2 == 0">
+                ; 生活调查票 > 基本情报 > 姓名
+                <span class="keywords">{{ keywords }}</span>
+              </span>
             </div>
           </div>
         </el-card>
@@ -154,8 +167,8 @@
       formatLock(percentage) {
         return percentage != 100 ? '锁定\r\n' + percentage + '%' : '锁定完毕'
       },
-      openDocInput(title) {
-        this.$router.push({ path: 'input-data', query: { title } })
+      openDocInput() {
+        this.$router.push({ path: 'input-data', query: { title: 'IMP_RMD' } })
       },
       openSdvInput(title) {
         this.$router.push({ path: 'sdv-input', query: { title } })
@@ -165,7 +178,7 @@
         this.cards[index].stared = status
         this.$notify({
           title: '成功',
-          message: status ? '该数据已标记' : '该数据已取消标记',
+          message: status ? '该数据已收藏' : '该数据已取消收藏',
           type: 'success',
         })
       },
@@ -174,7 +187,7 @@
         this.cards[index].collected = status
         this.$notify({
           title: '成功',
-          message: status ? '该数据已收藏' : '该数据已取消收藏',
+          message: status ? '该数据已添加至执行列表' : '该数据已从执行列表删除',
           type: 'success',
         })
       },
@@ -185,7 +198,7 @@
 <style lang="scss" scoped>
   .home {
     &-container {
-      margin: 30px;
+      padding: 30px;
     }
   }
 
@@ -195,8 +208,11 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        user-select: none;
+        cursor: pointer;
         & ~ div {
-          margin-top: 15px;
+          font-size: 14px;
+          margin-top: 12px;
         }
       }
       &-content {
@@ -204,11 +220,8 @@
         font-weight: $base-font-weight-title;
       }
       &-buttons {
-        & > *:hover {
-          cursor: pointer;
-          transform: scale(1.5);
-          transition-duration: 0.8s;
-        }
+        display: flex;
+        cursor: pointer;
       }
     }
     &-progress {
@@ -217,10 +230,6 @@
         position: relative;
         align-items: center;
         cursor: pointer;
-        &:hover {
-          transform: scale(1.1);
-          transition-duration: 0.8s;
-        }
       }
       &-modules {
         margin-top: 16px;
@@ -228,10 +237,6 @@
         justify-content: space-around;
         & > * {
           cursor: pointer;
-          &:hover {
-            transform: scale(1.1);
-            transition-duration: 0.8s;
-          }
         }
       }
     }
@@ -256,9 +261,14 @@
 
   .search-info {
     font-size: $base-font-size-small;
-    span {
+    .keywords {
       color: $base-color-red;
       word-break: break-all;
     }
+  }
+  .text-truncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 </style>

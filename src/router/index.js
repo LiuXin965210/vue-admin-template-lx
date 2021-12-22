@@ -74,6 +74,12 @@ export const constantRoutes = [
         meta: { title: 'Home', icon: 'home' },
       },
       {
+        path: '/query',
+        name: 'Query',
+        component: () => import('@/views/query/index'),
+        meta: { title: 'Query', icon: 'query' },
+      },
+      {
         path: '/warning',
         name: 'Warning',
         component: () => import('@/views/warning/index'),

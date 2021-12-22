@@ -32,6 +32,7 @@
           show-checkbox
           node-key="id"
           default-expand-all="true"
+          :render-content="renderTree"
         ></el-tree>
       </el-aside>
       <el-main class="card-container">
@@ -76,56 +77,68 @@
           {
             id: 1,
             label: 'IMP_RAD',
+            icon: 'home',
             children: [
               {
                 id: 2,
                 label: '登录票',
+                icon: 'folder',
                 children: [
                   {
                     id: 20,
                     label: '基本信息',
+                    icon: 'file',
                   },
                   {
                     id: 21,
                     label: '留置信息',
+                    icon: 'file',
                   },
                   {
                     id: 22,
                     label: '并发症',
+                    icon: 'file',
                   },
                 ],
               },
               {
                 id: 3,
                 label: '生活调查票',
+                icon: 'folder',
                 children: [
                   {
                     id: 30,
                     label: '生活调查票',
+                    icon: 'file',
                   },
                 ],
               },
               {
                 id: 4,
                 label: '生活调查票2',
+                icon: 'folder',
                 children: [
                   {
                     id: 40,
                     label: '生活调查票',
+                    icon: 'file',
                   },
                 ],
               },
               {
                 id: 5,
                 label: 'BaseLine',
+                icon: 'folder',
                 children: [
                   {
                     id: 50,
                     label: '合并症',
+                    icon: 'file',
                   },
                   {
                     id: 51,
                     label: '既往病例',
+                    icon: 'file',
                   },
                 ],
               },
@@ -151,6 +164,22 @@
       show() {
         this.dialogVisible = true
       },
+      renderTree(h, { node, data, store }) {
+        let span = (
+          <span style="display: flex; width: 100%; padding-right: 10px; align-items: center;">
+            <svg-icon icon-class={data.icon} />
+            <span style="margin-left: 10px">{data.label}</span>
+          </span>
+        )
+        span.children.push(
+          <svg-icon icon-class={data.info} style="margin-left: auto" />
+        )
+        if (data.activate !== undefined && !data.activate) {
+          span.data.style += 'font-style: italic; color: #dfdfdf;'
+          span.children.push(<el-switch v-model={data.activate}></el-switch>)
+        }
+        return span
+      },
       clearAll() {},
       executeAndClear() {},
       destoryCard() {},
@@ -163,11 +192,13 @@
     border: 1px solid #c3c3c5;
     padding: 8px 0;
   }
+
   .card-container {
     border: 1px solid #c3c3c5;
     border-radius: 0px;
     margin-left: 0.5rem;
   }
+
   .cards {
     padding: 0.5rem;
     margin-bottom: 0.5rem;
@@ -196,4 +227,13 @@
     padding: 0rem !important;
     margin-bottom: 1rem;
   }
+
+    >>>.el-input {
+      input {
+        border: 2px solid #dbdbdb;
+        width: 400px;
+        height: 20px;
+      }
+    }
+  
 </style>
