@@ -62,6 +62,24 @@ export const constantRoutes = [
   },
 
   {
+    path: '/export',
+    component: () => import('@/views/export/index'),
+    hidden: true,
+  },
+
+  {
+    path: '/export-list',
+    component: () => import('@/views/export-list/index'),
+    hidden: true,
+  },
+
+  {
+    path: '/sign-input',
+    component: () => import('@/views/sign-input/index'),
+    hidden: true,
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/home',

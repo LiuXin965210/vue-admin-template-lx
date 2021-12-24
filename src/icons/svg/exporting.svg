@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="绘图.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="8.7291667"
+     inkscape:cx="-0.68735083"
+     inkscape:cy="23.427208"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer3" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="蓝色背景"
+     style="display:inline;opacity:1">
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#3c77eb;fill-opacity:1;stroke-width:3.766;stroke-dashoffset:20.5;paint-order:stroke fill markers;stop-color:#000000"
+       id="path859"
+       inkscape:flatsided="true"
+       sodipodi:sides="6"
+       sodipodi:cx="12.02864"
+       sodipodi:cy="5.7279234"
+       sodipodi:r1="21.44203"
+       sodipodi:r2="18.569342"
+       sodipodi:arg1="1.0569517"
+       sodipodi:arg2="1.5805505"
+       inkscape:rounded="0.04"
+       inkscape:randomized="0"
+       d="M 22.568019,24.400955 C 21.821098,24.822531 1.865565,24.627875 1.1270096,24.19181 0.38845411,23.755745 -9.420736,6.3764184 -9.4123701,5.518778 -9.4040043,4.6611376 0.74233881,-12.523533 1.4892601,-12.945109 2.2361814,-13.366684 22.191715,-13.172028 22.93027,-12.735963 23.668825,-12.299898 33.478016,5.0794284 33.46965,5.9370688 33.461284,6.7947092 23.314941,23.97938 22.568019,24.400955 Z"
+       transform="matrix(0.24682814,0.1354762,-0.1354762,0.24682814,4.1910478,3.3183684)" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="白色">
+    <path
+       style="fill:#f9f9f9;stroke:#f9f9f9;stroke-width:0.0704321;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 5.3826183,4.3220903 c 0.2500761,0.00444 0.2842168,0.2224371 0.3191616,0.2942903 0.025651,0.052744 0.079197,0.1571217 0.079197,0.1571217 L 6.2600777,5.7240082 5.9272481,6.3896669 5.1909889,5.0180062 C 5.1480612,4.9172334 5.0724777,4.8600012 4.9489312,4.86672 c 0,0 -1.2159647,0.026477 -1.3111459,0.010087 C 3.5426043,4.860419 3.5245608,5.0366547 3.5470133,5.0986898 3.5694663,5.1607258 5.150646,8.0437257 5.150646,8.0437257 L 7.0992519,4.4744995 c 0.05421,-0.099296 0.1450884,-0.153133 0.2803429,-0.1826668 0,0 1.5700135,0.036979 2.420578,0.040346 0.12064,4.77e-4 0.2259142,0.2545515 0.168409,0.3670499 L 7.7802287,8.9802893 C 7.6848988,9.1667825 7.3835699,9.0988349 7.3190798,8.9917892 6.8163507,8.1573107 6.7685456,8.0252922 6.4416211,7.4385841 L 6.7643647,6.8334397 7.4905376,7.983214 C 7.5960012,8.1161091 7.6409984,8.007148 7.6949805,7.934123 L 9.1546847,5.0079208 C 9.1644978,4.9320502 9.1659498,4.8595259 9.0437422,4.8364633 L 7.7521861,4.8497467 C 7.6356172,4.8514237 7.5098746,4.9428607 7.4602807,5.0381782 L 5.3927038,9.0119593 c -0.04725,0.090812 -0.360539,0.080255 -0.4132882,-0.00391 C 3.5201619,6.6797767 2.9277838,5.2697453 2.6582938,4.6923325 2.6123647,4.5939243 2.7466976,4.347387 2.8535099,4.3460204 c 0.3390102,-0.00434 0.8477618,-0.053775 2.5291084,-0.02393 z"
+       id="path9402"
+       sodipodi:nodetypes="ssccccczzcscsssscccccccssssss" />
+    <g
+       aria-label="W"
+       id="text14857"
+       style="font-size:4px;line-height:1.25;font-family:STKaiti;-inkscape-font-specification:'STKaiti, Normal';font-variant-ligatures:none;fill:#ffffff;stroke-width:0.264583" />
+  </g>
+</svg>

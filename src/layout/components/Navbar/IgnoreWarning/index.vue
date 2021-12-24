@@ -9,13 +9,14 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button type="primary">确 定</el-button>
-      <el-button>取 消</el-button>
+      <el-button type="info">取 消</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
   export default {
+    name: 'IgnoreWarning',
     data() {
       return {
         title: '警告忽视理由',
@@ -24,7 +25,7 @@
       }
     },
     methods: {
-      showIgnoreWaring() {
+      show() {
         this.dialogFormVisible = true
       },
     },

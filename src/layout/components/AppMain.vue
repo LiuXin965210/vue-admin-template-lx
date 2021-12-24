@@ -19,8 +19,8 @@
 
 <style scoped>
   .app-main {
-    overflow-y: auto;
-    height: 650px;
+    /* overflow-y: auto;
+    height: 650px; */
   }
   .fixed-header + .app-main {
     padding-top: 50px;

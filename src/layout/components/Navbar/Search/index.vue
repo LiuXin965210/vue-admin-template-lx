@@ -1,7 +1,62 @@
 ﻿<template>
   <div style="display: flex; align-items: center">
-    <div class="search-container">
-      <el-popover placement="bottom-start" width="400" trigger="click">
+    <div
+      class="search-container"
+      :style="!showDetail ? 'padding-left:20px' : 'padding-left:5px'"
+    >
+      <span v-if="showDetail" slot="reference" class="svg-container">
+        <svg-icon icon-class="history" />
+      </span>
+      <el-input
+        v-if="showDetail"
+        v-model="keywords"
+        style="width: 400px"
+        size="mini"
+        @change="search"
+      ></el-input>
+      <div
+        v-else
+        style="
+          width: 400px;
+          border: 1px solid #dedede;
+          display: flex;
+          white-space: nowrap;
+          align-items: center;
+          padding: 0 4px;
+          border-radius: 4px;
+        "
+      >
+        <span style="margin-right: 10px">输入率</span>
+        <el-link type="primary" underline>介于</el-link>
+        <el-input value="20" size="mini" style="width: 50px"></el-input>
+        <span>% ~</span>
+        <el-input value="40" size="mini" style="width: 50px"></el-input>
+        <span>%</span>
+      </div>
+      <el-popover placement="bottom-start" trigger="hover">
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-radio-button label="常用"></el-radio-button>
+          </el-col>
+          <el-col :span="6">
+            <el-radio-button label="全部"></el-radio-button>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" style="margin-top: 10px">
+          <el-col :span="6">
+            <el-radio-button label="输入率"></el-radio-button>
+          </el-col>
+          <el-col :span="6">
+            <el-radio-button label="审查率"></el-radio-button>
+          </el-col>
+          <el-col :span="6">
+            <el-radio-button label="SDV率"></el-radio-button>
+          </el-col>
+          <el-col :span="6">
+            <el-radio-button label="锁定率"></el-radio-button>
+          </el-col>
+        </el-row>
+        <el-divider></el-divider>
         <div class="search-history">
           <div>历史记录</div>
           <div>
@@ -22,47 +77,30 @@
             :closable="canEdit"
             :type="tag.type"
             style="margin-right: 10px"
+            @click.native="showDetailSearch"
             @close="removeTag(tag)"
           >
             {{ tag.name }}
           </el-tag>
         </div>
         <span slot="reference" class="svg-container">
-          <svg-icon icon-class="history" />
-        </span>
-      </el-popover>
-      <el-input
-        v-model="keywords"
-        @change="search"
-        size="mini"
-        style="width: 400px"
-      ></el-input>
-
-      <el-popover placement="bottom-start" trigger="hover">
-        <el-radio-group v-model="searchType">
-          <el-radio-button label="全部"></el-radio-button>
-          <el-radio-button label="输入率"></el-radio-button>
-          <el-radio-button label="审查率"></el-radio-button>
-          <el-radio-button label="SDV率"></el-radio-button>
-          <el-radio-button label="锁定率"></el-radio-button>
-        </el-radio-group>
-        <span slot="reference" class="svg-container">
           <svg-icon icon-class="arrow-down" />
         </span>
       </el-popover>
     </div>
     <el-link
-      @click="openBatchExecution"
-      :underline="false"
       style="margin-left: 15px; font-size: 16px"
+      :underline="false"
+      @click="openBatchExecution"
     >
       <svg-icon icon-class="implement" style="width: 1.5em; height: 1.5em" />
       执行
     </el-link>
     <el-link
-      @click="openDocInput"
+      v-if="showCreate"
       style="margin-left: 15px; font-size: 16px"
       :underline="false"
+      @click="openDocInput"
     >
       <svg-icon icon-class="add-user" style="width: 1.5em; height: 1.5em" />
       创建
@@ -77,17 +115,23 @@
       @current-change="changePage"
     ></el-pagination>
     <BatchExecution ref="batchExcution"></BatchExecution>
+    <WarningBatchExecution ref="warningBatchExecution"></WarningBatchExecution>
+    <QueryBatchExecution ref="queryBatchExecution"></QueryBatchExecution>
   </div>
 </template>
 
 <script>
   import BatchExecution from '../BatchExecution'
+  import WarningBatchExecution from '../WarningBatchExecution'
+  import QueryBatchExecution from '../../../../views/query/components/QueryBatchExecution'
 
   export default {
     name: 'Search',
-    components: { BatchExecution },
+    components: { BatchExecution, WarningBatchExecution, QueryBatchExecution },
     data() {
       return {
+        showDetail: true,
+        showCreate: this.$route.name != 'query',
         pageNo: 1,
         searchType: '全部',
         canEdit: false,
@@ -120,10 +164,26 @@
       },
       changePage() {},
       openDocInput(title) {
-        this.$router.push({ path: 'input-data', query: { title } })
+        this.$router.push({ path: 'input-data', query: { title: 'IMP_RMP' } })
       },
       openBatchExecution() {
-        this.$refs['batchExcution'].show()
+        switch (this.$route.name) {
+          case 'Home':
+            this.$refs['batchExcution'].show()
+            break
+          case 'Query':
+            this.$refs['queryBatchExecution'].show()
+            break
+          case 'Warning':
+            this.$refs['warningBatchExecution'].show()
+            break
+        }
+      },
+      setShowCreate(shown) {
+        this.showCreate = shown
+      },
+      showDetailSearch() {
+        this.showDetail = !this.showDetail
       },
     },
   }
@@ -154,12 +214,8 @@
     }
   }
   ::v-deep {
-    .el-input {
-      // input {
-      //   border: 0;
-      //   width: 400px;
-      //   height: 20px;
-      // }
+    .el-input__inner {
+      border: none;
     }
   }
 </style>

@@ -35,20 +35,24 @@
           :render-content="renderTree"
         ></el-tree>
       </el-aside>
-      <el-main class="card-container">
+      <el-main ref="main" class="card-container">
         <el-row :gutter="15">
-          <el-col v-for="(index, item) in 8" :key="item.id" :span="8">
+          <el-col
+            v-for="(item, index) in cards"
+            :key="item.docNumber"
+            :span="8"
+          >
             <div :class="getClass(index)" @click="getIndex(index)">
               <div style="font-weight: bold">
-                {{ 'IMRD-00' + index }}
+                {{ item.docNumber }}
                 <svg-icon
                   v-show="imgshow(index)"
                   icon-class="close"
-                  style="margin-left: 2.5rem"
+                  style="margin-left: 3.7rem"
                   @click="destoryCard(index)"
                 />
               </div>
-              <p class="card-font">○○○研究中心</p>
+              <p class="card-font">{{ item.hospitalName }}</p>
             </div>
           </el-col>
         </el-row>
@@ -58,10 +62,13 @@
 </template>
 
 <script>
+  import { getDocs } from '@/api/doc'
+
   export default {
     name: 'Index',
     data() {
       return {
+        cards: [],
         executionType: 'SDV',
         executionTypes: [
           {
@@ -150,8 +157,17 @@
         dialogVisible: false,
       }
     },
-    created() {},
+    created() {
+      this.fetchData()
+    },
     methods: {
+      fetchData() {
+        this.loading = true
+        getDocs().then((response) => {
+          this.cards = response.data.items
+          this.loading = false
+        })
+      },
       getIndex(index) {
         this.currentNumber = index
       },
@@ -164,15 +180,18 @@
       show() {
         this.dialogVisible = true
       },
+      execute() {
+        this.dialogVisible = false
+      },
       renderTree(h, { node, data, store }) {
         let span = (
           <span style="display: flex; width: 100%; padding-right: 10px; align-items: center;">
             <svg-icon icon-class={data.icon} />
-            <span style="margin-left: 10px">{data.label}</span>
+            <span style="margin-left: 6px">{data.label}</span>
           </span>
         )
         span.children.push(
-          <svg-icon icon-class={data.info} style="margin-left: auto" />
+          <svg-icon icon-class={data.info} style="margin-left: 6px" />
         )
         if (data.activate !== undefined && !data.activate) {
           span.data.style += 'font-style: italic; color: #dfdfdf;'
@@ -180,9 +199,16 @@
         }
         return span
       },
-      clearAll() {},
-      executeAndClear() {},
-      destoryCard() {},
+      clearAll() {
+        this.cards.splice(0)
+      },
+      executeAndClear() {
+        this.cards.splice(0)
+        this.dialogVisible = false
+      },
+      destoryCard(index) {
+        this.cards.splice(index, 1)
+      },
     },
   }
 </script>
@@ -200,14 +226,14 @@
   }
 
   .cards {
-    padding: 0.5rem;
+    padding: 0.35rem;
     margin-bottom: 0.5rem;
     border-radius: 6px;
     background-color: #f6f6f6;
     border: 2px solid #dbdbdb;
   }
   .active {
-    padding: 0.5rem;
+    padding: 0.35rem;
     margin-bottom: 0.5rem;
     border-radius: 6px;
     border: 2px solid rgba(53, 129, 243, 0.25);
@@ -228,12 +254,22 @@
     margin-bottom: 1rem;
   }
 
-    >>>.el-input {
-      input {
-        border: 2px solid #dbdbdb;
-        width: 400px;
-        height: 20px;
-      }
+  .el-input {
+    input {
+      border: 2px solid #dbdbdb;
+      width: 400px;
+      height: 20px;
     }
-  
+  }
+  .text-truncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  ::v-deep {
+    .el-input--suffix {
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+    }
+  }
 </style>

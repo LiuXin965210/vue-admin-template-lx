@@ -1,34 +1,57 @@
 ﻿<template>
   <div class="index-container">
-    <el-row :gutter="20">
-      <el-col v-for="(item, index) in warningInfo" :key="index" :span="6">
-        <el-card class="card-item">
-          <div class="card-title-container">
-            <div style="font-weight: bold; margin: 0rem; font-size: 16px">
-              {{ item.name }}
+    <el-row :gutter="50">
+      <el-col
+        v-for="(item, index) in warningInfo"
+        :key="index"
+        style="margin-bottom: 30px; position: relative"
+        :span="6"
+        :xs="24"
+        :sm="24"
+        :md="12"
+        :lg="6"
+        :xl="6"
+      >
+        <div>
+          <el-card
+            class="card-item"
+            :style="getFocusClass(index)"
+            @click.native="getIndex(index)"
+          >
+            <div class="card-title-container">
+              <div
+                style="font-weight: bold; margin: 0rem; font-size: 16px"
+                class="text-truncate"
+              >
+                {{ item.name }}
+              </div>
+              <svg-icon
+                class="card-title-buttons"
+                :icon-class="item.collected ? 'shopping' : 'grey-shopping'"
+                @click="collectDoc(index)"
+              />
             </div>
-            <svg-icon
-              class="card-title-buttons"
-              :icon-class="item.collected ? 'shopping' : 'grey-shopping'"
-              @click="collectDoc(index)"
-            />
-          </div>
-          <p style="color: blue; font-size: 14px">{{ item.infoPath }}</p>
-          <p style="font-size: 14px">
-            {{ item.info }}
-          </p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-dropdown style="margin-left: 10px">
-          <el-button icon="el-icon-setting" size="mini" circle></el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>生成质疑</el-dropdown-item>
-            <el-dropdown-item @click.native="openIgnoreWarning" divided>
-              忽视
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+            <el-dropdown style="position: absolute; right: -8px; top: -12px">
+              <el-button
+                v-show="imgshow(index)"
+                icon="el-icon-setting"
+                size="mini"
+              ></el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>生成质疑</el-dropdown-item>
+                <el-dropdown-item divided @click.native="openIgnoreWarning">
+                  忽视
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <p style="color: blue; font-size: 14px" class="text-truncate">
+              {{ item.infoPath }}
+            </p>
+            <p style="font-size: 14px">
+              {{ item.info }}
+            </p>
+          </el-card>
+        </div>
       </el-col>
     </el-row>
     <IgnoreWarning ref="ignoreWarning"></IgnoreWarning>
@@ -43,6 +66,7 @@
     components: { IgnoreWarning },
     data() {
       return {
+        currentNumber: -1,
         warningInfo: [
           {
             name: '文书同意取得日',
@@ -82,7 +106,19 @@
           title: '成功',
           message: status ? '该数据已添加至执行列表' : '该数据已从执行列表删除',
           type: 'success',
+          duration: 1000,
         })
+      },
+      getIndex(index) {
+        this.currentNumber = index
+      },
+      imgshow(index) {
+        return this.currentNumber == index
+      },
+      getFocusClass(index) {
+        if (this.currentNumber == index) {
+          return 'box-shadow: 0 0 0 5px rgba(53, 129, 243, 0.55);'
+        }
       },
     },
   }
@@ -102,28 +138,57 @@
           margin-top: 12px;
         }
       }
+      &-content {
+        display: flex;
+        font-size: $base-font-size-title;
+        font-weight: $base-font-weight-title;
+      }
       &-buttons {
         display: flex;
         cursor: pointer;
       }
     }
+    &-progress {
+      &-input {
+        display: flex;
+        position: relative;
+        align-items: center;
+        cursor: pointer;
+      }
+      &-modules {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-around;
+        & > * {
+          cursor: pointer;
+        }
+      }
+    }
+    &-tag {
+      margin-left: 10px;
+    }
   }
   .index-container {
-    padding: 16px !important;
+    padding: 30px 40px !important;
     margin: 0 !important;
     // background: #f5f7f8 !important;
-
-    .card-item:hover {
-      border-color: #91bcfc;
-      outline: 0;
-      box-shadow: 0 0 0 8px rgba(53, 129, 243, 0.25);
-    }
 
     .card-icon {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
       cursor: pointer;
+    }
+    .text-truncate {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+  ::v-deep {
+    .el-button--mini,
+    .el-button--mini.is-round {
+      padding: 5px;
     }
   }
 </style>

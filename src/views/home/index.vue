@@ -1,10 +1,10 @@
 <template>
   <div class="home-container">
-    <el-row v-loading.fullscreen.lock="loading" :gutter="50">
+    <el-row v-loading.fullscreen.lock="loading" :gutter="55">
       <el-col
         v-for="(item, index) in cards"
         :key="item.docNumber"
-        style="margin-bottom: 30px"
+        style="margin-bottom: 30px; position: relative"
         :span="6"
         :xs="24"
         :sm="24"
@@ -12,7 +12,11 @@
         :lg="6"
         :xl="6"
       >
-        <el-card class="card-item">
+        <el-card
+          class="card-item"
+          :style="getFocusClass(index)"
+          @click.native="setCurrentIndex(index)"
+        >
           <div class="card-title-container">
             <div
               class="card-title-content text-truncate"
@@ -31,20 +35,21 @@
                 :icon-class="item.collected ? 'shopping' : 'grey-shopping'"
                 @click="collectDoc(index)"
               />
-              <!-- <el-dropdown style="margin-left: 10px">
-                <el-button
-                  icon="el-icon-setting"
-                  size="mini"
-                  circle
-                ></el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>打开</el-dropdown-item>
-                  <el-dropdown-item divided>转院</el-dropdown-item>
-                  <el-dropdown-item>导出PDF</el-dropdown-item>
-                  <el-dropdown-item divided>删除</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown> -->
             </div>
+
+            <el-dropdown
+              v-if="imgshow(index)"
+              class="card-setting-button"
+              style="position: absolute; right: -8px; top: 0"
+            >
+              <el-button icon="el-icon-setting" size="mini"></el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>打开</el-dropdown-item>
+                <el-dropdown-item divided>转院</el-dropdown-item>
+                <el-dropdown-item>导出PDF</el-dropdown-item>
+                <el-dropdown-item divided>删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
           <div class="text-truncate">{{ item.hospitalName }}</div>
           <div class="text-truncate">
@@ -58,7 +63,7 @@
             <el-progress
               color="#20c6dc"
               :text-inside="true"
-              :stroke-width="26"
+              :stroke-width="22"
               :percentage="item.inputProgress"
               :format="formatInput"
               style="width: 100%"
@@ -88,7 +93,7 @@
                 :format="formatSDV"
               />
             </div>
-            <div>
+            <div @click.stop="openSignInput(item.docNumber)">
               <el-progress
                 :width="50"
                 :stroke-width="4"
@@ -134,6 +139,7 @@
     name: 'Home',
     data() {
       return {
+        currentIndex: -1,
         loading: true,
         cards: [],
       }
@@ -173,6 +179,9 @@
       openSdvInput(title) {
         this.$router.push({ path: 'sdv-input', query: { title } })
       },
+      openSignInput(title) {
+        this.$router.push({ path: 'sign-input', query: { title } })
+      },
       starDoc(index) {
         let status = !this.cards[index].stared
         this.cards[index].stared = status
@@ -180,6 +189,7 @@
           title: '成功',
           message: status ? '该数据已收藏' : '该数据已取消收藏',
           type: 'success',
+          duration: 1000,
         })
       },
       collectDoc(index) {
@@ -189,7 +199,19 @@
           title: '成功',
           message: status ? '该数据已添加至执行列表' : '该数据已从执行列表删除',
           type: 'success',
+          duration: 1000,
         })
+      },
+      setCurrentIndex(index) {
+        this.currentIndex = index
+      },
+      imgshow(index) {
+        return this.currentIndex == index
+      },
+      getFocusClass(index) {
+        if (this.currentIndex == index) {
+          return 'box-shadow: 0 0 0 5px rgba(53, 129, 243, 0.55);'
+        }
       },
     },
   }
@@ -198,7 +220,7 @@
 <style lang="scss" scoped>
   .home {
     &-container {
-      padding: 30px;
+      padding: 30px 40px;
     }
   }
 
@@ -256,6 +278,10 @@
     }
     .el-progress-bar__innerText {
       color: darkslategray;
+    }
+    .el-button--mini,
+    .el-button--mini.is-round {
+      padding: 5px;
     }
   }
 

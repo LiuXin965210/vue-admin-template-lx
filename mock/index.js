@@ -6,8 +6,9 @@ const table = require('./table')
 const doc = require('./doc')
 const hospital = require('./hospital')
 const role = require('./role')
+const querydoc = require('./querydoc')
 
-const mocks = [...user, ...table, ...doc, ...hospital, ...role]
+const mocks = [...user, ...table, ...doc, ...hospital, ...role, ...querydoc]
 
 // for front mock
 // please use it cautiously, it will redefine XMLHttpRequest,

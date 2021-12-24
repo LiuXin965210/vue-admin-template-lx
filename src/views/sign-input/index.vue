@@ -66,10 +66,10 @@
             <div class="data-title">
               【IMRD-001】
               <el-button type="primary" size="mini" style="margin-left: 590px">
-                SDV完了
+                署名完了
               </el-button>
               <el-button type="primary" size="mini" style="margin-left: 10px">
-                SDV取消
+                署名取消
               </el-button>
             </div>
             <el-col
@@ -84,8 +84,8 @@
                     <svg-icon icon-class="folder" />
                     <span style="margin-left: 10px">{{ item.name }}</span>
                     <el-checkbox
-                      style="margin-left: auto"
                       v-model="item.checked"
+                      style="margin-left: auto"
                     ></el-checkbox>
                   </div>
                   <div
@@ -149,7 +149,7 @@
             <div type="info" class="data-title">
               【基本情报】
               <el-checkbox v-model="basicChecked" style="float: right">
-                全部SDV
+                全部署名
               </el-checkbox>
             </div>
             <el-table
@@ -170,7 +170,7 @@
             <div type="info" class="data-title">
               【留置信息】
               <el-checkbox v-model="retentionChecked" style="float: right">
-                全部SDV
+                全部署名
               </el-checkbox>
             </div>
             <el-table
@@ -205,7 +205,7 @@
                 追加
               </el-button> -->
               <el-checkbox v-model="complicationChecked" style="float: right">
-                全部SDV
+                全部署名
               </el-checkbox>
             </div>
             <el-table
@@ -223,190 +223,150 @@
             </el-table>
           </el-row>
         </el-main>
-        <el-aside
-          :style="`border: 1px solid #dfdfdf; border-right: none; width: ${
-            tabsShow ? '300px' : '0px'
-          };`"
-        >
-          <div :class="tabsShow ? 'tabsShow' : 'tabsHidden'">
-            <el-tabs
-              v-model="activeName"
-              style="height: 659px"
-              @tab-click="handleClick"
-            >
-              <el-tab-pane label="警告" name="warning">
-                <div class="tab-card">
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                    "
-                  >
-                    <div>2021/11/24</div>
-                    <svg-icon icon-class="error-check" />
-                  </div>
-                  <div>请输入同意取得日。</div>
-                </div>
+        <el-aside>
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="警告" name="warning">
+              <div class="tab-card">
                 <div
-                  :disabled="!showCard2"
-                  class="tab-card"
-                  :style="`background-color: ${
-                    showCard2 ? 'white' : '#dfdfdf'
-                  }`"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
                 >
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                    "
-                  >
-                    <div>2021/11/24</div>
-                    <div v-if="!showCard2" class="register-link">取消忽视</div>
-                    <div v-if="showCard2" class="register-link">忽视</div>
-                  </div>
-                  <div>xxxxxxx</div>
+                  <div>2021/11/24</div>
+                  <svg-icon icon-class="error-check" />
                 </div>
-              </el-tab-pane>
-              <el-tab-pane label="质疑" name="query">
+                <div>请输入同意取得日。</div>
+              </div>
+              <div v-if="showCard2" class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>2021/11/24</div>
+                  <div class="register-link" @click="hiddenCard">忽视</div>
+                </div>
+                <div>xxxxxxx</div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="质疑" name="question">
+              <div class="tab-query-card">
+                <div style="display: flex">
+                  <label style="font-weight: bold">Query00121</label>
+                  <div class="query-status" style="background-color: #409eff">
+                    待发行
+                  </div>
+                </div>
+                <div class="title">质疑</div>
                 <div class="tab-query-card">
-                  <div style="display: flex">
-                    <label style="font-weight: bold">Query00121</label>
-                    <div class="query-status" style="background-color: #409eff">
-                      待发行
-                    </div>
-                  </div>
-                  <div class="title">质疑</div>
-                  <div class="tab-query-card">
-                    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                    <br />
-                    <br />
-                    张三 2021/11/25 数据核查提出
-                  </div>
-                  <div class="title">回答</div>
-                  <div class="tab-query-card">
-                    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                    <br />
-                    <br />
-                    李四 2021/11/26
-                  </div>
-                  <div class="title">再提问</div>
-                  <div class="tab-query-card">
-                    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                    <br />
-                    <br />
-                    张三 2021/11/27
-                  </div>
-                  <div class="title">
-                    回答
-                    <i class="el-icon-add-location"></i>
-                  </div>
-                  <el-input
-                    v-model="query2"
-                    type="textarea"
-                    :autosize="{ minRows: 3 }"
-                    style="width: -webkit-fill-available; font-size: 12px"
-                  ></el-input>
-                  <div style="margin-top: 10px; text-align: right">
-                    <el-button type="primary">OK</el-button>
-                    <el-button type="primary">取消</el-button>
-                  </div>
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  张三 2021/11/25 数据核查提出
                 </div>
+                <div class="title">回答</div>
                 <div class="tab-query-card">
-                  <div style="display: flex">
-                    <label style="font-weight: bold">Query00122</label>
-                    <div class="query-status" style="background-color: #e6a23c">
-                      待回答
-                    </div>
-                  </div>
-                  <div class="title">质疑</div>
-                  <div class="tab-query-card">
-                    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                    <br />
-                    <br />
-                    张三 2021/11/25 数据核查提出
-                  </div>
-                  <div class="title">
-                    回答
-                    <i class="el-icon-add-location"></i>
-                  </div>
-                  <el-input
-                    v-model="query2"
-                    type="textarea"
-                    :autosize="{ minRows: 3 }"
-                    style="width: -webkit-fill-available; font-size: 12px"
-                  ></el-input>
-                  <div style="margin-top: 10px; text-align: right">
-                    <el-button type="primary">OK</el-button>
-                    <el-button type="primary">取消</el-button>
-                  </div>
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  李四 2021/11/26
                 </div>
-                <el-button type="primary" style="margin: 10px">追加</el-button>
-              </el-tab-pane>
-              <el-tab-pane label="修订" name="revise">
-                <div class="tab-card">
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                    "
-                  >
-                    <div>症例保存</div>
-                    <div>张三 2021/11/24</div>
-                  </div>
-                  <el-divider></el-divider>
-                  <div>2021/10/1 -> 2021/10/9</div>
+                <div class="title">再提问</div>
+                <div class="tab-query-card">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  张三 2021/11/27
                 </div>
-                <div class="tab-card">
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                    "
-                  >
-                    <div>症例保存</div>
-                    <div>张三 2021/11/30</div>
-                  </div>
-                  <el-divider></el-divider>
-                  <div>男 -> 女</div>
+                <div class="title">
+                  回答
+                  <i class="el-icon-add-location"></i>
                 </div>
-              </el-tab-pane>
-              <el-tab-pane label="批注" name="annotation">
                 <el-input
-                  v-model="annotation"
+                  v-model="query2"
                   type="textarea"
                   :autosize="{ minRows: 3 }"
-                  style="margin: 10px; width: -webkit-fill-available"
+                  style="width: -webkit-fill-available; font-size: 12px"
                 ></el-input>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-        </el-aside>
-        <el-aside
-          style="
-            border-top: 1px solid #dfdfdf;
-            border-bottom: 1px solid #dfdfdf;
-            border-left: 1px solid #fafafa;
-            border-right: 1px solid #fafafa;
-            width: 20px;
-            background-color: #fafafa;
-          "
-        >
-          <i
-            v-show="tabsShow"
-            class="el-icon-s-unfold"
-            style="margin-top: 10px"
-            @click="showTabs"
-          ></i>
-          <i
-            v-show="!tabsShow"
-            class="el-icon-s-fold"
-            style="margin-top: 10px"
-            @click="showTabs"
-          ></i>
+                <div style="margin-top: 10px; text-align: right">
+                  <el-button type="primary">OK</el-button>
+                  <el-button type="primary">取消</el-button>
+                </div>
+              </div>
+              <div class="tab-query-card">
+                <div style="display: flex">
+                  <label style="font-weight: bold">Query00122</label>
+                  <div class="query-status" style="background-color: #e6a23c">
+                    待回答
+                  </div>
+                </div>
+                <div class="title">质疑</div>
+                <div class="tab-query-card">
+                  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  <br />
+                  <br />
+                  张三 2021/11/25 数据核查提出
+                </div>
+                <div class="title">
+                  回答
+                  <i class="el-icon-add-location"></i>
+                </div>
+                <el-input
+                  v-model="query2"
+                  type="textarea"
+                  :autosize="{ minRows: 3 }"
+                  style="width: -webkit-fill-available; font-size: 12px"
+                ></el-input>
+                <div style="margin-top: 10px; text-align: right">
+                  <el-button type="primary">OK</el-button>
+                  <el-button type="primary">取消</el-button>
+                </div>
+              </div>
+              <el-button type="primary" style="margin: 10px">追加</el-button>
+            </el-tab-pane>
+            <el-tab-pane label="修订" name="revise">
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>症例保存</div>
+                  <div>张三 2021/11/24</div>
+                </div>
+                <el-divider></el-divider>
+                <div>2021/10/1 -> 2021/10/9</div>
+              </div>
+              <div class="tab-card">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>症例保存</div>
+                  <div>张三 2021/11/30</div>
+                </div>
+                <el-divider></el-divider>
+                <div>男 -> 女</div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="批注" name="annotation">
+              <el-input
+                v-model="annotation"
+                type="textarea"
+                :autosize="{ minRows: 3 }"
+                style="margin: 10px; width: -webkit-fill-available"
+              ></el-input>
+            </el-tab-pane>
+          </el-tabs>
         </el-aside>
       </el-container>
     </el-container>
@@ -418,7 +378,7 @@
   import { tree, basicInfo, retentionInfo, complication } from './data'
 
   export default {
-    name: 'SdvInput',
+    name: 'SignInput',
     components: { Navbar },
     data() {
       return {
@@ -441,9 +401,6 @@
         showCard2: true,
         annotation: '',
         saved: true,
-        query1: '',
-        query2: '',
-        tabsShow: true,
       }
     },
     created() {},
@@ -475,10 +432,10 @@
           : { color: 'black' }
       },
       formatProgress() {
-        return 'SDV60%'
+        return '署名60%'
       },
       formatInput(percentage) {
-        return 'SDV\r\n' + percentage + '%'
+        return '署名\r\n' + percentage + '%'
       },
       formatSdv(percentage) {
         return '输入\r\n' + percentage + '%'
@@ -521,9 +478,6 @@
       },
       hiddenCard() {
         this.showCard2 = false
-      },
-      showTabs() {
-        this.tabsShow = !this.tabsShow
       },
     },
   }

@@ -7,7 +7,7 @@ export const tree = [
         id: '111',
         name: '基本情报',
         status: 'error',
-        sdvProgress: 'SDV0%',
+        sdvProgress: '署名0%',
       },
       {
         id: '11',
@@ -17,13 +17,13 @@ export const tree = [
             id: '112',
             name: '留置信息',
             status: 'error',
-            sdvProgress: 'SDV20%',
+            sdvProgress: '署名20%',
           },
           {
             id: '113',
             name: '并发症',
             status: 'over',
-            sdvProgress: 'SDV0%',
+            sdvProgress: '署名0%',
           },
         ],
       },
@@ -39,7 +39,7 @@ export const tree = [
                 id: '1211',
                 name: '生活调查票',
                 status: 'error',
-                sdvProgress: 'SDV40%',
+                sdvProgress: '署名40%',
               },
             ],
           },
@@ -51,7 +51,7 @@ export const tree = [
                 id: '1221',
                 name: '生活调查票',
                 status: 'over',
-                sdvProgress: 'SDV完了',
+                sdvProgress: '署名完了',
               },
             ],
           },
@@ -92,17 +92,17 @@ export const tree = [
           {
             id: '141',
             name: '有害事项1',
-            sdvProgress: 'SDV完了',
+            sdvProgress: '署名完了',
           },
           {
             id: '142',
             name: '有害事项2',
-            sdvProgress: 'SDV40%',
+            sdvProgress: '署名40%',
           },
           {
             id: '143',
             name: '有害事项3',
-            sdvProgress: 'SDV40%',
+            sdvProgress: '署名40%',
           },
         ],
       },
@@ -213,7 +213,7 @@ function createDiv(value) {
   container.style.backgroundColor = '#f6edde'
 
   let label = document.createElement('label')
-  label.textContent = 'SDV'
+  label.textContent = '署名'
   label.style.fontWeight = 100
   label.style.fontSize = '13px'
 

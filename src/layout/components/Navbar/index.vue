@@ -5,26 +5,30 @@
       <div class="study-title">IMP_RMD</div>
     </div>
     <el-tabs
+      v-model="activeName"
       type="border-card"
       style="height: 100%; width: 100%"
       @tab-click="handleClick"
     >
-      <el-tab-pane label="受试者" name="patient">
-        <Search></Search>
+      <el-tab-pane label="受试者" name="Home">
+        <Search ref="home"></Search>
       </el-tab-pane>
-      <el-tab-pane label="质疑" name="query">
-        <Search></Search>
+      <el-tab-pane label="质疑" name="Query">
+        <Search ref="query"></Search>
       </el-tab-pane>
-      <el-tab-pane label="警告" name="warning">
-        <Search></Search>
+      <el-tab-pane label="警告" name="Warning">
+        <Search ref="warning"></Search>
       </el-tab-pane>
     </el-tabs>
     <div class="user-container">
+      <el-avatar icon="el-icon-user-solid"></el-avatar>
+      <span style="margin-right: 15px">用户名</span>
       <el-select
         v-model="curRole"
         size="mini"
         filterable
         placeholder="请选择研究者"
+        style="width: 100px"
       >
         <el-option
           v-for="item in roles"
@@ -47,11 +51,19 @@
         ></el-option>
       </el-select>
       <el-dropdown>
-        <el-avatar icon="el-icon-user-solid"></el-avatar>
+        <i class="el-icon-s-tools" style="font-size: 30px; color: darkgray"></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="openExport">导出</el-dropdown-item>
+          <el-dropdown-item divided>用户</el-dropdown-item>
+          <el-dropdown-item>研究中心</el-dropdown-item>
+          <el-dropdown-item>角色</el-dropdown-item>
+          <el-dropdown-item>基准值</el-dropdown-item>
+          <el-dropdown-item divided @click.native="openExportList">
+            <span>下载一览</span>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display: block">退出登录</span>
+            <span style="display: block">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -74,6 +86,7 @@
         curHospital: '',
         roles: [],
         hospitals: [],
+        activeName: this.$route.name,
       }
     },
     computed: {
@@ -103,16 +116,24 @@
       },
       handleClick(tab, event) {
         switch (tab.name) {
-          case 'patient':
+          case 'Home':
             this.$router.push('/home')
             break
-          case 'query':
+          case 'Query':
+            this.$refs.query.setShowCreate(false)
             this.$router.push('/query')
             break
-          case 'warning':
+          case 'Warning':
             this.$router.push('/warning')
             break
         }
+      },
+      openExport() {
+        this.$router.push('export')
+      },
+      openExportList() {
+        const { href } = this.$router.resolve('export-list')
+        window.open(href, '_blank')
       },
     },
   }
@@ -173,6 +194,9 @@
       }
       .el-input__inner {
         font-size: 15px;
+      }
+      .el-tabs__item.is-active {
+        font-weight: 700;
       }
     }
   }

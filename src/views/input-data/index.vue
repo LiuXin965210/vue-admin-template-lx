@@ -1,11 +1,11 @@
 <template>
   <div class="inputData-container">
-    <div style="display: flex; align-items: center; background-color: #f5f4f3;">
+    <div style="display: flex; align-items: center; background-color: #f5f4f3">
       <div class="study-container">
         <img src="@/assets/icon-images/logo.svg" class="study-icon" />
       </div>
-      <label style="padding: 10px;">IMP_RMD > 症例入力 > {{ title }}</label>
-      <div style="margin-left: auto; padding-right: 10px;">
+      <label style="padding: 10px">IMP_RMD > 症例入力 > {{ title }}</label>
+      <div style="margin-left: auto; padding-right: 10px">
         <el-button type="primary" :disabled="saved" @click="save">
           保 存
         </el-button>
@@ -13,8 +13,8 @@
       </div>
     </div>
 
-    <el-container style="height: 700px;">
-      <el-aside style="border: 1px solid #dfdfdf;">
+    <el-container style="height: 700px">
+      <el-aside style="border: 1px solid #dfdfdf">
         <el-tree
           node-key="id"
           :default-checked-keys="defaultSelectedKeys"
@@ -27,8 +27,8 @@
           @current-change="changeForm"
         ></el-tree>
       </el-aside>
-      <el-main style="border: 1px solid #dfdfdf;">
-        <el-scrollbar style="height: 100%;">
+      <el-main style="border: 1px solid #dfdfdf">
+        <el-scrollbar style="height: 100%">
           <el-row v-show="folder.length != 0">
             <el-tag type="info" class="data-title">【{{ title }}】</el-tag>
             <el-col
@@ -43,9 +43,9 @@
             >
               <el-card class="card-item">
                 <div>
-                  <div style="display: flex; align-items: center;">
+                  <div style="display: flex; align-items: center">
                     <svg-icon :icon-class="item.icon" />
-                    <span style="margin-left: 10px;">{{ item.label }}</span>
+                    <span style="margin-left: 10px">{{ item.label }}</span>
                   </div>
                   <div
                     style="
@@ -88,8 +88,8 @@
                         </td>
                       </tr>
                       <tr>
-                        <td style="color: #f6bb4e;">质疑</td>
-                        <td style="color: red;">警告</td>
+                        <td style="color: #f6bb4e">质疑</td>
+                        <td style="color: red">警告</td>
                       </tr>
                     </div>
                   </div>
@@ -104,14 +104,14 @@
               :show-header="false"
               border
               :cell-style="addClass"
-              style="border-color: black;"
+              style="border-color: black"
             >
               <el-table-column prop="label" width="300px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
                   <div
-                    v-html="scope.row.value"
                     :style="`height: ${scope.row.height || '40px'}`"
+                    v-html="scope.row.value"
                   ></div>
                 </template>
               </el-table-column>
@@ -129,8 +129,8 @@
               <el-table-column prop="value">
                 <template slot-scope="scope">
                   <div
-                    v-html="scope.row.value"
                     :style="`height: ${scope.row.height || '40px'}`"
+                    v-html="scope.row.value"
                   ></div>
                 </template>
               </el-table-column>
@@ -140,7 +140,7 @@
             <el-tag
               type="info"
               class="data-title"
-              style="display: flex; align-items: center;"
+              style="display: flex; align-items: center"
             >
               【并发症】
               <el-button
@@ -170,8 +170,8 @@
               <el-table-column prop="value">
                 <template slot-scope="scope">
                   <div
-                    v-html="scope.row.value"
                     :style="`height: ${scope.row.height || '40px'}`"
+                    v-html="scope.row.value"
                   ></div>
                 </template>
               </el-table-column>
@@ -185,14 +185,14 @@
               :show-header="false"
               border
               :cell-style="addClass"
-              style="border-color: black;"
+              style="border-color: black"
             >
               <el-table-column prop="label" width="300px"></el-table-column>
               <el-table-column prop="value">
                 <template slot-scope="scope">
                   <div
-                    v-html="scope.row.value"
                     :style="`height: ${scope.row.height || '40px'}`"
+                    v-html="scope.row.value"
                   ></div>
                 </template>
               </el-table-column>
@@ -208,7 +208,7 @@
         <div :class="tabsShow ? 'tabsShow' : 'tabsHidden'">
           <el-tabs
             v-model="activeName"
-            style="height: 659px;"
+            style="height: 659px"
             @tab-click="handleClick"
           >
             <el-tab-pane label="警告" name="warning">
@@ -258,9 +258,9 @@
             </el-tab-pane>
             <el-tab-pane label="质疑" name="query">
               <div class="tab-query-card">
-                <div style="display: flex;">
-                  <label style="font-weight: bold;">Query00121</label>
-                  <div class="query-status" style="background-color: #409eff;">
+                <div style="display: flex">
+                  <label style="font-weight: bold">Query00121</label>
+                  <div class="query-status" style="background-color: #409eff">
                     待发行
                   </div>
                 </div>
@@ -290,20 +290,20 @@
                   <i class="el-icon-add-location"></i>
                 </div>
                 <el-input
+                  v-model="query2"
                   type="textarea"
                   :autosize="{ minRows: 3 }"
-                  v-model="query2"
-                  style="width: -webkit-fill-available; font-size: 12px;"
+                  style="width: -webkit-fill-available; font-size: 12px"
                 ></el-input>
-                <div style="margin-top: 10px; text-align: right;">
+                <div style="margin-top: 10px; text-align: right">
                   <el-button type="primary">OK</el-button>
                   <el-button type="primary">取消</el-button>
                 </div>
               </div>
               <div class="tab-query-card">
-                <div style="display: flex;">
-                  <label style="font-weight: bold;">Query00122</label>
-                  <div class="query-status" style="background-color: #e6a23c;">
+                <div style="display: flex">
+                  <label style="font-weight: bold">Query00122</label>
+                  <div class="query-status" style="background-color: #e6a23c">
                     待回答
                   </div>
                 </div>
@@ -319,19 +319,17 @@
                   <i class="el-icon-add-location"></i>
                 </div>
                 <el-input
+                  v-model="query2"
                   type="textarea"
                   :autosize="{ minRows: 3 }"
-                  v-model="query2"
-                  style="width: -webkit-fill-available; font-size: 12px;"
+                  style="width: -webkit-fill-available; font-size: 12px"
                 ></el-input>
-                <div style="margin-top: 10px; text-align: right;">
+                <div style="margin-top: 10px; text-align: right">
                   <el-button type="primary">OK</el-button>
                   <el-button type="primary">取消</el-button>
                 </div>
               </div>
-              <el-button type="primary" style="margin: 10px;">
-                追加
-              </el-button>
+              <el-button type="primary" style="margin: 10px">追加</el-button>
             </el-tab-pane>
             <el-tab-pane label="修订" name="revise">
               <div class="tab-card">
@@ -365,10 +363,12 @@
             </el-tab-pane>
             <el-tab-pane label="批注" name="annotation">
               <el-input
+                v-model="annotation"
                 type="textarea"
                 :autosize="{ minRows: 3 }"
-                v-model="annotation"
-                style="margin: 10px; width: -webkit-fill-available;"
+                style="margin: 10px; width: -webkit-fill-available"
+                maxlength="500"
+                show-word-limit
               ></el-input>
             </el-tab-pane>
           </el-tabs>
@@ -387,13 +387,13 @@
         <i
           v-show="tabsShow"
           class="el-icon-s-unfold"
-          style="margin-top: 10px;"
+          style="margin-top: 10px"
           @click="showTabs"
         ></i>
         <i
           v-show="!tabsShow"
           class="el-icon-s-fold"
-          style="margin-top: 10px;"
+          style="margin-top: 10px"
           @click="showTabs"
         ></i>
       </el-aside>
@@ -620,8 +620,8 @@
     padding: 10px 10px 6px;
     background-color: rgb(202, 236, 245);
     .study-icon {
-      width: 90px;
-      height: 30px;
+      width: 150px;
+      height: 40px;
     }
   }
   .el-main {
