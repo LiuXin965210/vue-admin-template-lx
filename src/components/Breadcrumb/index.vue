@@ -39,10 +39,8 @@
         )
         const first = matched[0]
 
-        if (!this.isDashboard(first)) {
-          matched = [
-            { path: '/dashboard', meta: { title: 'Dashboard' } },
-          ].concat(matched)
+        if (!this.isHome(first)) {
+          matched = [{ path: '/home', meta: { title: 'Home' } }].concat(matched)
         }
 
         this.levelList = matched.filter(
@@ -50,14 +48,12 @@
             item.meta && item.meta.title && item.meta.breadcrumb !== false
         )
       },
-      isDashboard(route) {
+      isHome(route) {
         const name = route && route.name
         if (!name) {
           return false
         }
-        return (
-          name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
-        )
+        return name.trim().toLocaleLowerCase() === 'Home'.toLocaleLowerCase()
       },
       pathCompile(path) {
         // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
