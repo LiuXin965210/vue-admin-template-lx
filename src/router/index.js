@@ -94,7 +94,7 @@ export const constantRoutes = [
       {
         path: 'mySchedule',
         name: 'MySchedule',
-        component: () => import('@/views/schedule/my-schedule/index'),
+        component: () => import('@/views/schedule/my-schedule'),
         meta: { title: '我的日程', icon: 'my-schedule' },
       },
       {
