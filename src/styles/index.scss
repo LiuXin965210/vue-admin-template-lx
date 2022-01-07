@@ -10,6 +10,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+
+  @include base-scrollbar;
 }
 
 label {
@@ -44,6 +46,10 @@ a:hover {
   text-decoration: none;
 }
 
+div {
+  @include base-scrollbar;
+}
+
 div:focus {
   outline: none;
 }
@@ -59,7 +65,28 @@ div:focus {
   }
 }
 
-// main-container global css
+/* 页面容器开始 */
 .app-container {
   padding: 20px;
+
+  @include base-scrollbar;
 }
+/* 页面容器结束 */
+
+/* 表格开始 */
+.el-table {
+  .el-table__body-wrapper {
+    @include base-scrollbar;
+  }
+}
+/* 表格结束 */
+
+/* 菜单开始 */
+.el-menu.el-menu--popup.el-menu--popup-right-start {
+  @include scrollbar;
+}
+
+.el-menu.el-menu--popup.el-menu--popup-bottom-start {
+  @include scrollbar;
+}
+/* 菜单结束 */
