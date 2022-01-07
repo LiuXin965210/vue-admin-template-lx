@@ -80,14 +80,29 @@ export const constantRoutes = [
   },
 
   {
-    path: '/form',
+    path: '/schedule',
     component: Layout,
+    redirect: '/schedule/mySchedule',
+    name: 'Schedule',
+    meta: { title: '日程管理', icon: 'schedule' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '日程管理', icon: 'form' },
+        path: 'mySchedule',
+        name: 'MySchedule',
+        component: () => import('@/views/schedule/my-schedule/index'),
+        meta: { title: '我的日程', icon: 'my-schedule' },
+      },
+      {
+        path: 'depSchedule',
+        name: 'DepSchedule',
+        component: () => import('@/views/schedule/dep-schedule/index'),
+        meta: { title: '部门日程', icon: 'dep-schedule' },
+      },
+      {
+        path: 'myNote',
+        name: 'MyNote',
+        component: () => import('@/views/schedule/my-note/index'),
+        meta: { title: '我的便签', icon: 'my-note' },
       },
     ],
   },
