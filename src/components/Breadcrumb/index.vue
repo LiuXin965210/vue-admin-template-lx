@@ -40,7 +40,7 @@
         const first = matched[0]
 
         if (!this.isHome(first)) {
-          matched = [{ path: '/home', meta: { title: 'Home' } }].concat(matched)
+          matched = [{ path: '/home', meta: { title: '主页' } }].concat(matched)
         }
 
         this.levelList = matched.filter(
