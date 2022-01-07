@@ -78,7 +78,6 @@ export const constantRoutes = [
       },
     ],
   },
-
   {
     path: '/schedule',
     component: Layout,
@@ -169,7 +168,7 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/system',
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
