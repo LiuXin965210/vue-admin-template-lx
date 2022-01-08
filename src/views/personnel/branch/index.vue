@@ -33,21 +33,31 @@
         <template #default="{ row }">
           <div style="display: flex; justify-content: space-between">
             <el-button size="mini" @click="editBranch(row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="deleteBranch(row)">
-              删除
-            </el-button>
+            <el-popconfirm
+              title="确定删除该机构吗？"
+              @confirm="deleteBranch(row)"
+            >
+              <el-button slot="reference" size="mini" type="danger">
+                删除
+              </el-button>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
     </el-table>
+    <branch-edit ref="edit"></branch-edit>
   </div>
 </template>
 
 <script>
-  import { findAll } from '@/api/branch'
+  import { findAll, deleteById } from '@/api/branch'
+  import BranchEdit from './components/BranchEdit.vue'
 
   export default {
     name: 'Branch',
+    components: {
+      BranchEdit,
+    },
     data() {
       return {
         isLoading: true,
@@ -76,15 +86,23 @@
       this.getBranchList()
     },
     methods: {
-      getBranchList() {
+      async getBranchList() {
         this.isLoading = true
-        findAll().then((response) => {
-          this.branchList = response.data.items
-          this.isLoading = false
-        })
+        const { data } = await findAll()
+        this.branchList = data
+        this.isLoading = false
       },
-      editBranch() {},
-      deleteBranch() {},
+      editBranch(row) {
+        this.$refs['edit'].open(row)
+      },
+      async deleteBranch(row) {
+        const { msg, index } = await deleteById(row.branchId)
+        this.$message({
+          message: index,
+          type: 'success',
+        })
+        this.getBranchList()
+      },
     },
   }
 </script>
