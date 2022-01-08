@@ -176,23 +176,9 @@ export const constantRoutes = [
   {
     path: '/system',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
+    redirect: '/system/table',
+    name: 'System',
     meta: { title: '系统管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' },
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' },
-      },
-    ],
   },
 
   {
@@ -201,41 +187,13 @@ export const constantRoutes = [
     redirect: '/example/table',
     name: 'Example',
     meta: { title: '考勤管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' },
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' },
-      },
-    ],
   },
   {
-    path: '/example',
+    path: '/message',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
+    redirect: '/message/table',
+    name: 'Message',
     meta: { title: '消息传递', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' },
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' },
-      },
-    ],
   },
 
   // 404 page must be placed at the end !!!
