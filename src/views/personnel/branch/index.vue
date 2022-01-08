@@ -4,14 +4,19 @@
     <el-divider></el-divider>
 
     <div class="input-container">
-      <el-input v-model="branchName" class="input-item">
-        <template slot="prepend">机构名称</template>
-      </el-input>
-      <el-input v-model="branchShortName" class="input-item">
-        <template slot="prepend">机构简称</template>
-      </el-input>
-      <el-button type="primary">添加</el-button>
-      <el-button type="primary" disabled>保存修改</el-button>
+      <el-button icon="el-icon-plus" type="primary" @click="editBranch()">
+        添加
+      </el-button>
+      <div>
+        <el-input
+          v-model="keyword"
+          placeholder="请输入检索内容"
+          style="width: 400px; margin-right: 20px"
+        />
+        <el-button icon="el-icon-search" type="primary" @click="search">
+          查询
+        </el-button>
+      </div>
     </div>
     <el-table
       v-loading="isLoading"
@@ -86,6 +91,7 @@
       this.getBranchList()
     },
     methods: {
+      search() {},
       async getBranchList() {
         this.isLoading = true
         const { data } = await findAll()
@@ -110,8 +116,9 @@
 <style lang="scss">
   .input-container {
     display: flex;
-    justify-content: center;
-    margin: 50px 0;
+    justify-content: space-between;
+    width: 60%;
+    margin: 50px auto;
     .input-item {
       width: 400px;
     }

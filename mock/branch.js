@@ -47,7 +47,7 @@ module.exports = [
     response: (config) => {
       const { branchName, branchShortName } = config.body
       const branchId = Mock.mock('@id')
-      data.items.push(branchId, branchName, branchShortName)
+      data.items.push({ branchId, branchName, branchShortName })
       return {
         code: 20000,
         msg: '机构创建成功',
