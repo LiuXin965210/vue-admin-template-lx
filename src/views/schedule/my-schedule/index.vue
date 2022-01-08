@@ -114,7 +114,7 @@
         startTime: '',
         endTime: '',
         type: '',
-        showCalendar: false,
+        showCalendar: true,
         value: new Date(),
         options: [
           {
@@ -194,8 +194,6 @@
     margin-top: 10px;
   }
   .add-schedule-container {
-    display: flex;
-    flex-direction: column;
     font-size: 13px;
   }
   .schedule-header {
