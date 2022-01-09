@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <h1 style="text-align: center">机构管理</h1>
     <el-divider></el-divider>
 
@@ -15,16 +15,16 @@
       <el-input
         v-model="keyword"
         placeholder="请输入检索内容"
-        style="width: 400px; margin-right: 20px"
+        style="width: 350px"
       >
-        <el-button slot="prepend" icon="el-icon-search"></el-button>
+        <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
     </div>
     <el-table
       v-loading="isLoading"
       :data="filterBranchList"
-      style="width: 60%; margin: auto"
-      max-height="595"
+      style="margin: auto"
+      max-height="578"
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="55"></el-table-column>
@@ -126,7 +126,6 @@
   .input-container {
     display: flex;
     justify-content: space-between;
-    width: 60%;
     margin: 50px auto;
     & > * {
       margin: 0 15px;
