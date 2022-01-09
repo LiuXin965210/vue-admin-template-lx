@@ -37,7 +37,7 @@ module.exports = [
       )
       return {
         code: 20000,
-        msg: '机构删除成功2',
+        msg: '机构删除成功',
       }
     },
   },

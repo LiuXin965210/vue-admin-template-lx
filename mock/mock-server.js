@@ -37,7 +37,12 @@ const responseFake = (url, type, respond) => {
     url: new RegExp(`${process.env.VUE_APP_BASE_API}${url}`),
     type: type || 'get',
     response(req, res) {
-      console.log('request invoke:' + req.path)
+      if (JSON.stringify(req.body) !== '{}') {
+        console.log(chalk.green(`> 请求地址：${req.path}`))
+        console.log(chalk.green(`> 请求参数：${JSON.stringify(req.body)}\n`))
+      } else {
+        console.log(chalk.green(`> 请求地址：${req.path}\n`))
+      }
       res.json(
         Mock.mock(respond instanceof Function ? respond(req, res) : respond)
       )
