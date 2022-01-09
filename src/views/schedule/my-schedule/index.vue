@@ -13,7 +13,16 @@
               <svg-icon icon-class="add-schedule"></svg-icon>
             </div>
           </div>
-          <div class="date-lunar">{{ solarToLunar(date, data) }}</div>
+          <div class="date-lunar">
+            {{ solarToLunar(date, data) }}
+          </div>
+          <div
+            v-if="data.day.split('-')[2] == 15"
+            class="date-schedule"
+            @click="editSchedule"
+          >
+            ◎ 8:30 今天下...
+          </div>
         </div>
       </template>
     </el-calendar>
@@ -24,80 +33,87 @@
         </el-button>
       </div>
       <el-divider></el-divider>
-      <div class="schedule-body">
-        <div class="schedule-theme">
-          <label>主题：</label>
-          <el-input v-model="theme" placeholder="请输入主题"></el-input>
-        </div>
-
-        <div class="schedule-section">
-          <div class="schedule-position">
-            <label>地点：</label>
-            <el-input v-model="position" placeholder="请输入地点"></el-input>
-          </div>
-          <div class="schedule-type">
-            <label>会议类型：</label>
-            <el-select v-model="type" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-        </div>
-        <div class="schedule-time">
-          <div class="schedule-position">
-            <label>开始时间：----</label>
-            <el-date-picker
-              v-model="startTime"
-              type="datetime"
-              placeholder="选择日期时间"
-              default-time="12:00:00"
-            ></el-date-picker>
-          </div>
-          <div class="schedule-position">
-            <label>结束时间：----</label>
-            <el-date-picker
-              v-model="endTime"
-              type="datetime"
-              placeholder="选择日期时间"
-              default-time="12:00:00"
-            ></el-date-picker>
-          </div>
-        </div>
+      <el-form
+        ref="scheduleForm"
+        :model="scheduleForm"
+        label-position="left"
+        label-width="100px"
+        :rules="rules"
+        class="schedule-body"
+      >
+        <el-form-item label="主题：" prop="theme">
+          <el-input
+            v-model="scheduleForm.theme"
+            placeholder="请输入主题"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="地点：" prop="position">
+          <el-input
+            v-model="scheduleForm.position"
+            placeholder="请输入地点"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="会议类型：" prop="type">
+          <el-select v-model="scheduleForm.type" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="开始时间：" prop="startTime">
+          <el-date-picker
+            v-model="scheduleForm.startTime"
+            type="datetime"
+            placeholder="选择日期时间"
+            default-time="12:00:00"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间：" prop="endTime">
+          <el-date-picker
+            v-model="scheduleForm.endTime"
+            type="datetime"
+            placeholder="选择日期时间"
+            default-time="12:00:00"
+          ></el-date-picker>
+        </el-form-item>
         <el-input
-          v-model="textarea2"
+          v-model="scheduleForm.content"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4 }"
           placeholder="请输入内容"
-        >
-          >
-        </el-input>
-        <div class="schedule-book">
-          <div>
-            预约他人：
-            <svg-icon icon-class="add-user"></svg-icon>
-            <div class="schedule-book-area">
-              <div class="schedule-users"></div>
-              <div class="schedule-delete-book">
-                <el-button size="mini">删除选定预约的人</el-button>
-              </div>
-            </div>
-          </div>
-          <div></div>
-        </div>
+        ></el-input>
+        <el-cascader
+          separator="-"
+          placeholder="预约他人"
+          :options="userData"
+          :props="{
+            multiple: true,
+            expandTrigger: 'hover',
+          }"
+          class="schedule-book"
+          clearable
+        ></el-cascader>
         <div class="schedule-description">
           <div>选项：</div>
-          <el-checkbox v-model="checked">是否公开</el-checkbox>
-          <div>创建者：系统管理员</div>
-          <div>创建日期：2022-1-8 23:52:27</div>
+          <el-checkbox v-model="scheduleForm.checked">是否公开</el-checkbox>
+          <div>{{ '创建者：' + curUserName }}</div>
+          <div>
+            {{ '创建日期：' + dateFormat() }}
+          </div>
         </div>
-      </div>
+      </el-form>
       <div class="schedule-footer">
-        <el-button type="primary" @click="quit">保存退出</el-button>
-        <el-button type="primary" @click="quit">删除</el-button>
+        <el-button type="primary" @click="saveAndQuit">保存退出</el-button>
+        <el-button
+          type="primary"
+          :disabled="deleteDisabled"
+          @click="delSchdule"
+        >
+          删除
+        </el-button>
         <el-button type="primary" @click="quit">退出</el-button>
       </div>
     </div>
@@ -109,11 +125,32 @@
   export default {
     data() {
       return {
-        theme: '',
-        position: '',
-        startTime: '',
-        endTime: '',
-        type: '',
+        scheduleForm: {
+          theme: '',
+          position: '',
+          type: '',
+          startTime: '',
+          endTime: '',
+          content: '',
+          checked: false,
+        },
+        rules: {
+          theme: [{ required: true, message: '请输入主题', trigger: 'change' }],
+          position: [
+            { required: true, message: '请输入地点', trigger: 'change' },
+          ],
+          type: [
+            { required: true, message: '请选择会议类型', trigger: 'change' },
+          ],
+          startTime: [
+            { required: true, message: '请设置开始时间', trigger: 'change' },
+          ],
+          endTime: [
+            { required: true, message: '请设置结束时间', trigger: 'change' },
+          ],
+        },
+        curUserName: '系统管理员',
+        deleteDisabled: true,
         showCalendar: true,
         value: new Date(),
         options: [
@@ -136,6 +173,131 @@
           {
             value: 'external cooperation meeting',
             label: '外部合作会议',
+          },
+        ],
+        userData: [
+          {
+            value: 1,
+            label: '华北电力科学研究院',
+            icon: 'folder',
+            children: [
+              {
+                value: 2,
+                label: '销售部',
+                icon: 'tree-department',
+                children: [
+                  {
+                    value: 3,
+                    label: '李贝贝',
+                    department: '销售部',
+                    icon: 'person',
+                  },
+                  {
+                    value: 4,
+                    label: '齐静雪',
+                    department: '销售部',
+                    icon: 'person',
+                  },
+                  {
+                    value: 5,
+                    label: '杨嘉丽',
+                    department: '销售部',
+                    icon: 'person',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            value: 6,
+            label: '中国科学院声学研究所',
+            icon: 'folder',
+            children: [
+              {
+                value: 7,
+                label: '研发部',
+                icon: 'tree-department',
+                children: [
+                  {
+                    value: 8,
+                    department: '研发部',
+                    label: '系统管理员',
+                    icon: 'person',
+                  },
+                  {
+                    value: 9,
+                    department: '研发部',
+                    label: '武丽平',
+                    icon: 'person',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            value: 10,
+            label: '北大青鸟集团',
+            icon: 'folder',
+            children: [
+              {
+                value: 11,
+                label: '财务部',
+                icon: 'tree-department',
+                children: [],
+              },
+              {
+                value: 12,
+                label: '综合部',
+                icon: 'tree-department',
+                children: [
+                  {
+                    value: 13,
+                    department: '综合部',
+                    label: '刘广平',
+                    icon: 'person',
+                  },
+                ],
+              },
+              {
+                value: 14,
+                label: '培训部',
+                icon: 'tree-department',
+                children: [
+                  {
+                    value: 15,
+                    department: '培训部',
+                    label: '王超',
+                    icon: 'person',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            value: 16,
+            label: '大唐国际盘山发电有限公司',
+            icon: 'folder',
+            children: [
+              {
+                value: 17,
+                label: '发电部',
+                icon: 'tree-department',
+                children: [
+                  {
+                    value: 18,
+                    department: '发电部',
+                    label: '姬耀钦',
+                    icon: 'person',
+                  },
+                  {
+                    value: 19,
+                    department: '发电部',
+                    label: '袁斌',
+                    icon: 'person',
+                  },
+                ],
+              },
+            ],
           },
         ],
       }
@@ -168,20 +330,65 @@
       addSchedule() {
         this.showCalendar = false
       },
+      editSchedule() {
+        this.showCalendar = false
+        this.deleteDisabled = false
+      },
+      saveAndQuit() {
+        this.$refs['scheduleForm'].validate((valid) => {
+          if (valid) {
+            this.showCalendar = true
+          } else {
+            return false
+          }
+        })
+      },
       quit() {
         this.showCalendar = true
+      },
+      dateFormat(date = new Date(), fmt = 'yyyy-MM-dd hh:mm:ss') {
+        let ret
+        const opt = {
+          'y+': date.getFullYear().toString(), // 年
+          'M+': (date.getMonth() + 1).toString(), // 月
+          'd+': date.getDate().toString(), // 日
+          'h+': date.getHours().toString(), // 时
+          'm+': date.getMinutes().toString(), // 分
+          's+': date.getSeconds().toString(), // 秒
+          // 有其他格式化字符需求可以继续添加，必须转化成字符串
+        }
+        for (let k in opt) {
+          ret = new RegExp('(' + k + ')').exec(fmt)
+          if (ret) {
+            fmt = fmt.replace(
+              ret[1],
+              ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, '0')
+            )
+          }
+        }
+        return fmt
+      },
+      onAddUser() {
+        let selected = ''
+        const nodes = this.$refs.tree.getCheckedNodes(true)
+        for (const node of nodes) {
+          if (node.icon != 'person') {
+            this.$message('您选择的不是人员，请重新选择！')
+            return
+          }
+          selected += node.department + ' - ' + node.label + '\r\n'
+        }
+        this.$message(selected)
       },
     },
   }
 </script>
 
 <style>
-  label {
-    width: 60px;
-  }
   .date-cell {
     display: flex;
     flex-direction: column;
+    font-size: 14px;
   }
   .date-content {
     display: flex;
@@ -190,7 +397,8 @@
   .btn-add-schedule {
     margin-left: 15px;
   }
-  .date-lunar {
+  .date-lunar,
+  .date-schedule {
     margin-top: 10px;
   }
   .add-schedule-container {
@@ -202,48 +410,16 @@
   .schedule-body {
     margin: 0 60px;
   }
-  .schedule-theme {
-    display: flex;
-    line-height: 50px;
-    height: 50px;
+  .schedule-book {
+    width: 300px;
+    margin-top: 15px;
   }
-  .schedule-position,
-  .schedule-type {
-    display: flex;
-    line-height: 50px;
-    height: 50px;
-    margin-right: 170px;
-  }
-  .schedule-type label {
-    width: 100px;
-  }
-  .schedule-time,
-  .schedule-book,
-  .schedule-book-area {
-    margin: 10px 0;
-  }
-  .schedule-book-area,
   .schedule-description {
-    display: flex;
-  }
-  .schedule-time label {
-    width: 120px;
-  }
-  .schedule-section {
-    margin-top: 20px;
+    margin-top: 15px;
     display: flex;
   }
   .schedule-footer {
-    margin: 20px;
-  }
-  .schedule-users {
-    height: 150px;
-    width: 120px;
-    background-color: aqua;
-  }
-  .schedule-delete-book {
-    line-height: 150px;
-    margin-left: 5px;
+    margin: 15px;
   }
   .schedule-description div {
     margin-left: 130px;
