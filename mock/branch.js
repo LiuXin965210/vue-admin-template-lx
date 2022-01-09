@@ -28,8 +28,22 @@ module.exports = [
     },
   },
   {
+    url: '/vue-admin-template/branch/deleteByIds',
+    type: 'delete',
+    response: (config) => {
+      const { branchIds } = config.body
+      data.items = data.items.filter(
+        (item) => !branchIds.includes(item.branchId)
+      )
+      return {
+        code: 20000,
+        msg: '机构删除成功2',
+      }
+    },
+  },
+  {
     url: '/vue-admin-template/branch/deleteById',
-    type: 'get',
+    type: 'delete',
     response: (config) => {
       const { branchId } = config.body
       const index = data.items.findIndex((item) => item.branchId === branchId)
@@ -37,7 +51,6 @@ module.exports = [
       return {
         code: 20000,
         msg: '机构删除成功',
-        index: data.items,
       }
     },
   },
@@ -56,7 +69,7 @@ module.exports = [
   },
   {
     url: '/vue-admin-template/branch/updateById',
-    type: 'post',
+    type: 'put',
     response: (config) => {
       const { branchId, branchName, branchShortName } = config.body
       const index = data.items.findIndex((item) => item.branchId === branchId)

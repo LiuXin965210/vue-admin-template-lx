@@ -1,18 +1,25 @@
 import request from '@/utils/request'
 
-export function findAll(params) {
+export function findAll() {
   return request({
     url: '/vue-admin-template/branch/findAll',
     method: 'get',
-    params,
   })
 }
 
-export function deleteById(params) {
+export function deleteById(branchId) {
   return request({
     url: '/vue-admin-template/branch/deleteById',
-    method: 'get',
-    params,
+    method: 'delete',
+    data: { branchId },
+  })
+}
+
+export function deleteByIds(branchIds) {
+  return request({
+    url: '/vue-admin-template/branch/deleteByIds',
+    method: 'delete',
+    data: { branchIds },
   })
 }
 
@@ -27,7 +34,7 @@ export function create(data) {
 export function updateById(data) {
   return request({
     url: '/vue-admin-template/branch/updateById',
-    method: 'post',
+    method: 'put',
     data,
   })
 }

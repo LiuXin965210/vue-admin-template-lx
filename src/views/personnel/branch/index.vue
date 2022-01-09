@@ -4,32 +4,36 @@
     <el-divider></el-divider>
 
     <div class="input-container">
-      <el-button icon="el-icon-plus" type="primary" @click="editBranch()">
-        添加
-      </el-button>
       <div>
-        <el-input
-          v-model="keyword"
-          placeholder="请输入检索内容"
-          style="width: 400px; margin-right: 20px"
-        />
-        <el-button icon="el-icon-search" type="primary" @click="search">
-          查询
+        <el-button icon="el-icon-plus" type="primary" @click="editBranch()">
+          添加
+        </el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="deleteBranch()">
+          删除
         </el-button>
       </div>
+      <el-input
+        v-model="keyword"
+        placeholder="请输入检索内容"
+        style="width: 400px; margin-right: 20px"
+      >
+        <el-button slot="prepend" icon="el-icon-search"></el-button>
+      </el-input>
     </div>
     <el-table
       v-loading="isLoading"
       :data="filterBranchList"
       style="width: 60%; margin: auto"
-      height="595"
+      max-height="595"
+      @selection-change="setSelectRows"
     >
-      <el-table-column prop="date" label="机构名称">
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column label="机构名称">
         <template slot-scope="scope">
           {{ scope.row.branchName }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="机构简称">
+      <el-table-column label="机构简称">
         <template slot-scope="scope">
           {{ scope.row.branchShortName }}
         </template>
@@ -55,7 +59,7 @@
 </template>
 
 <script>
-  import { findAll, deleteById } from '@/api/branch'
+  import { findAll, deleteById, deleteByIds } from '@/api/branch'
   import BranchEdit from './components/BranchEdit.vue'
 
   export default {
@@ -66,10 +70,11 @@
     data() {
       return {
         isLoading: true,
+        selectRows: [],
+        keyword: '',
         branchName: '',
         branchShortName: '',
         branchList: [],
-        keyword: '',
       }
     },
     computed: {
@@ -91,7 +96,9 @@
       this.getBranchList()
     },
     methods: {
-      search() {},
+      setSelectRows(val) {
+        this.selectRows = val
+      },
       async getBranchList() {
         this.isLoading = true
         const { data } = await findAll()
@@ -102,9 +109,11 @@
         this.$refs['edit'].open(row)
       },
       async deleteBranch(row) {
-        const { msg, index } = await deleteById(row.branchId)
+        const { msg } = row
+          ? await deleteById(row.branchId)
+          : await deleteByIds(this.selectRows.map((row) => row.branchId))
         this.$message({
-          message: index,
+          message: msg,
           type: 'success',
         })
         this.getBranchList()
@@ -119,15 +128,8 @@
     justify-content: space-between;
     width: 60%;
     margin: 50px auto;
-    .input-item {
-      width: 400px;
-    }
     & > * {
       margin: 0 15px;
     }
-  }
-  .table-container {
-    display: flex;
-    justify-content: center;
   }
 </style>
