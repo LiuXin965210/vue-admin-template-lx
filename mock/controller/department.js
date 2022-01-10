@@ -3,8 +3,17 @@ const Mock = require('mockjs')
 const data = Mock.mock({
   'items|15': [
     {
-      deptId: '@id',
+      'deptId|+1': 1,
       'deptName|+1': [
+        '销售部',
+        '研发部',
+        '财务部',
+        '发电部',
+        '综合部',
+        '培训部',
+      ],
+      'branchId|+1': 1,
+      'branchName|+1': [
         '华北电力科学研究院',
         '中国科学院声学研究所',
         '北大青鸟集团',
@@ -12,7 +21,8 @@ const data = Mock.mock({
         '青岛恒源田地有限公司',
         '阿里巴巴有限公司',
       ],
-      'userName|+1': ['张三', '李四', '王五', '李白', '杜甫', '刘欣', '陈瑞'],
+      'userId|+1': 1,
+      'username|+1': ['张三', '李四', '王五', '李白', '杜甫', '刘欣', '陈瑞'],
       connectTelNo: '8@integer(1000000, 9999999)',
       connectMobileTelNo: '13@integer(100000000, 999999999)',
       faxes: '@integer(10000000, 99999999)',
@@ -25,10 +35,9 @@ module.exports = [
     url: '/vue-admin-template/department/findAll',
     type: 'get',
     response: () => {
-      const items = data.items
       return {
         code: 20000,
-        data: items,
+        data: data.items,
       }
     },
   },
@@ -61,17 +70,9 @@ module.exports = [
     url: '/vue-admin-template/department/create',
     type: 'post',
     response: (config) => {
-      const { deptName, userName, connectTelNo, connectMobileTelNo, faxes } =
-        config.body
-      const deptId = Mock.mock('@id')
-      data.items.push({
-        deptId,
-        deptName,
-        userName,
-        connectTelNo,
-        connectMobileTelNo,
-        faxes,
-      })
+      const department = Object.assign({}, config.body)
+      department.deptId = Mock.mock('@id')
+      data.items.push(department)
       return {
         code: 20000,
         msg: '部门创建成功',
@@ -82,23 +83,11 @@ module.exports = [
     url: '/vue-admin-template/department/updateById',
     type: 'put',
     response: (config) => {
-      const {
-        deptId,
-        deptName,
-        userName,
-        connectTelNo,
-        connectMobileTelNo,
-        faxes,
-      } = config.body
-      const index = data.items.findIndex((item) => item.deptId === deptId)
-      data.items.splice(index, 1, {
-        deptId,
-        deptName,
-        userName,
-        connectTelNo,
-        connectMobileTelNo,
-        faxes,
-      })
+      const department = Object.assign({}, config.body)
+      const index = data.items.findIndex(
+        (item) => item.deptId === department.deptId
+      )
+      data.items.splice(index, 1, department)
       return {
         code: 20000,
         msg: '部门更新成功',

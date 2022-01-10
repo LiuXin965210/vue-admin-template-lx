@@ -7,12 +7,17 @@
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="机构名称" prop="branchName">
-        <el-input v-model.trim="form.branchName" autocomplete="off"></el-input>
+        <el-input
+          v-model.trim="form.branchName"
+          autocomplete="off"
+          :maxlength="50"
+        ></el-input>
       </el-form-item>
       <el-form-item label="机构简称" prop="branchShortName">
         <el-input
           v-model.trim="form.branchShortName"
           autocomplete="off"
+          :maxlength="50"
         ></el-input>
       </el-form-item>
     </el-form>
@@ -39,7 +44,7 @@
             { required: true, trigger: 'blur', message: '请输入机构名称' },
           ],
           branchShortName: [
-            { required: true, trigger: 'blur', message: '请输入简称' },
+            { required: true, trigger: 'blur', message: '请输入机构简称' },
           ],
         },
         visible: false,
@@ -59,7 +64,7 @@
         this.$refs['form'].resetFields()
         this.form = this.$options.data().form
         this.visible = false
-        this.$parent.getBranchList()
+        this.$parent.initBranchList()
       },
       save() {
         const self = this
@@ -74,7 +79,7 @@
             })
             self.$refs['form'].resetFields()
             self.visible = false
-            self.$parent.getBranchList()
+            self.$parent.initBranchList()
             self.form = self.$options.data().form
           } else {
             return false

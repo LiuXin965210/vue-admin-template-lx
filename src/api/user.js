@@ -22,3 +22,10 @@ export function logout() {
     method: 'post',
   })
 }
+
+export function findAll() {
+  return request({
+    url: '/vue-admin-template/user/findAll',
+    method: 'get',
+  })
+}

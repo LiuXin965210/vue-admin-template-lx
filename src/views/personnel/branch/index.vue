@@ -22,22 +22,24 @@
     </div>
     <el-table
       v-loading="isLoading"
-      :data="filterBranchList"
+      :data="
+        branchList.filter(
+          (branch) =>
+            !keyword ||
+            branch.branchName.toLowerCase().includes(keyword.toLowerCase()) ||
+            branch.branchShortName.toLowerCase().includes(keyword.toLowerCase())
+        )
+      "
       style="margin: auto"
       max-height="578"
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column label="机构名称">
-        <template slot-scope="scope">
-          {{ scope.row.branchName }}
-        </template>
-      </el-table-column>
-      <el-table-column label="机构简称">
-        <template slot-scope="scope">
-          {{ scope.row.branchShortName }}
-        </template>
-      </el-table-column>
+      <el-table-column prop="branchName" label="机构名称"></el-table-column>
+      <el-table-column
+        prop="branchShortName"
+        label="机构简称"
+      ></el-table-column>
       <el-table-column width="150" fixed="right" label="操作">
         <template #default="{ row }">
           <div style="display: flex; justify-content: space-between">
@@ -54,7 +56,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <branch-edit ref="edit"></branch-edit>
+    <branch-edit ref="branch-edit"></branch-edit>
   </div>
 </template>
 
@@ -72,41 +74,24 @@
         isLoading: true,
         selectRows: [],
         keyword: '',
-        branchName: '',
-        branchShortName: '',
         branchList: [],
       }
     },
-    computed: {
-      filterBranchList: function () {
-        const self = this
-        return this.branchList.filter(function (branch) {
-          if (!self.keyword) {
-            return true
-          }
-          const lowerKeyword = self.keyword.toLowerCase()
-          return (
-            branch.branchName.toLowerCase().includes(lowerKeyword) ||
-            branch.branchShortName.toLowerCase().includes(lowerKeyword)
-          )
-        })
-      },
-    },
     created() {
-      this.getBranchList()
+      this.initBranchList()
     },
     methods: {
       setSelectRows(val) {
         this.selectRows = val
       },
-      async getBranchList() {
+      async initBranchList() {
         this.isLoading = true
         const { data } = await findAll()
         this.branchList = data
         this.isLoading = false
       },
       editBranch(row) {
-        this.$refs['edit'].open(row)
+        this.$refs['branch-edit'].open(row)
       },
       async deleteBranch(row) {
         const { msg } = row
@@ -116,7 +101,7 @@
           message: msg,
           type: 'success',
         })
-        this.getBranchList()
+        this.initBranchList()
       },
     },
   }

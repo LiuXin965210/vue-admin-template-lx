@@ -1,3 +1,5 @@
+const Mock = require('mockjs')
+
 const tokens = {
   admin: {
     token: 'admin-token',
@@ -7,7 +9,7 @@ const tokens = {
   },
 }
 
-const users = {
+const userInfo = {
   'admin-token': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
@@ -24,8 +26,21 @@ const users = {
   },
 }
 
+const data = Mock.mock({
+  'items|30': [
+    {
+      'userId|+1': 1,
+      username: '@cname',
+      password: '@word(6)',
+      'departId|+1': '@natural(1, 15)',
+      gender: '@natural(0, 1)',
+      'roleId|+1': 1,
+      'userState|+1': 1,
+    },
+  ],
+})
+
 module.exports = [
-  // user login
   {
     url: '/vue-admin-template/user/login',
     type: 'post',
@@ -47,14 +62,12 @@ module.exports = [
       }
     },
   },
-
-  // get user info
   {
     url: '/vue-admin-template/user/info.*',
     type: 'get',
     response: (config) => {
       const { token } = config.query
-      const info = users[token]
+      const info = userInfo[token]
 
       // mock error
       if (!info) {
@@ -70,15 +83,23 @@ module.exports = [
       }
     },
   },
-
-  // user logout
   {
     url: '/vue-admin-template/user/logout',
     type: 'post',
-    response: (_) => {
+    response: () => {
       return {
         code: 20000,
         data: 'success',
+      }
+    },
+  },
+  {
+    url: '/vue-admin-template/user/findAll',
+    type: 'get',
+    response: () => {
+      return {
+        code: 20000,
+        data: data.items,
       }
     },
   },

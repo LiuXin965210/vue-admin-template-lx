@@ -3,7 +3,7 @@ const Mock = require('mockjs')
 const data = Mock.mock({
   'items|15': [
     {
-      branchId: '@id',
+      'branchId|+1': 1,
       'branchName|+1': [
         '华北电力科学研究院',
         '中国科学院声学研究所',
@@ -20,10 +20,9 @@ module.exports = [
     url: '/vue-admin-template/branch/findAll',
     type: 'get',
     response: () => {
-      const items = data.items
       return {
         code: 20000,
-        data: items,
+        data: data.items,
       }
     },
   },
@@ -58,9 +57,9 @@ module.exports = [
     url: '/vue-admin-template/branch/create',
     type: 'post',
     response: (config) => {
-      const { branchName, branchShortName } = config.body
-      const branchId = Mock.mock('@id')
-      data.items.push({ branchId, branchName, branchShortName })
+      const branch = config.body
+      branch.branchId = Mock.mock('@id')
+      data.items.push(branch)
       return {
         code: 20000,
         msg: '机构创建成功',
@@ -71,9 +70,11 @@ module.exports = [
     url: '/vue-admin-template/branch/updateById',
     type: 'put',
     response: (config) => {
-      const { branchId, branchName, branchShortName } = config.body
-      const index = data.items.findIndex((item) => item.branchId === branchId)
-      data.items.splice(index, 1, { branchId, branchName, branchShortName })
+      const branch = config.body
+      const index = data.items.findIndex(
+        (item) => item.branchId === branch.branchId
+      )
+      data.items.splice(index, 1, branch)
       return {
         code: 20000,
         msg: '机构更新成功',
